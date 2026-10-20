@@ -120,7 +120,7 @@ button:disabled{opacity:.45;cursor:default}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ---------- 아늑한 섬 테마 ---------- */
-body{background:var(--sky) url("assets/img/bg-island.webp") center top/cover fixed no-repeat}
+body{background:#8DBF5A url("assets/img/bg-cover.webp") center center/cover fixed no-repeat}
 .deco{position:fixed;z-index:0;pointer-events:none;height:auto}
 .d-sheep{width:clamp(80px,11vw,170px);left:max(10px,env(safe-area-inset-left,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));animation:bob 3.2s ease-in-out infinite}
 .d-book{width:clamp(70px,9vw,140px);right:max(12px,env(safe-area-inset-right,0px));bottom:max(20px,env(safe-area-inset-bottom,0px));animation:bob 3.6s ease-in-out infinite .8s}
@@ -156,11 +156,49 @@ button.ghost{background:var(--card);border:2px solid var(--line)}
 .chip{background:#E3F2FB;color:var(--ink)}
 .modalBg{background:rgba(40,70,110,.45)}
 @media (prefers-reduced-motion:reduce){.deco,.hero{animation:none}}
+
+.brand{gap:10px;padding:6px 18px 6px 8px}
+.brand .badge{height:54px;width:auto}
+.pagetag{font-family:var(--display);background:var(--card);color:var(--ink);padding:8px 18px;border-radius:18px;box-shadow:0 4px 0 rgba(60,80,40,.18);text-align:center;line-height:1.25;font-size:1.05rem}
+.herotitle{font-size:clamp(2.4rem,5vw,3.4rem)}
+.titlewrap{display:flex;flex-direction:column;align-items:center;gap:2px}
+.entitle{font-family:var(--display);font-size:clamp(1.05rem,2vw,1.35rem);color:var(--accent);letter-spacing:.06em}
+.flow{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;font-family:var(--display);font-size:1.25rem}
+.flow span{background:var(--shade);padding:8px 16px;border-radius:999px}
+.flow span.s1{background:var(--sun)} .flow span.s2{background:#CFE8FF} .flow span.s3{background:#D8F2D0}
+.flow i{font-style:normal;color:var(--accent);font-size:1.4rem}
+.homegrid{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+@media (max-width:720px){.homegrid{grid-template-columns:1fr}}
+.homegrid>*{min-width:0}.row>label{min-width:0}.row>label select,.row>label input{width:100%}
+.card.student{border:4px solid var(--accent);box-shadow:0 0 0 6px rgba(245,138,60,.22),0 10px 24px rgba(60,80,40,.18);position:relative}
+.card.student .ribbon{position:absolute;top:-16px;left:18px;background:var(--accent);color:#fff;font-family:var(--display);padding:4px 16px;border-radius:999px;box-shadow:0 3px 0 var(--accent-dark)}
+.card.student h2{font-size:1.8rem;color:var(--accent-dark)}
+.card.student input,.card.student select{font-size:1.15rem;padding:12px 14px}
+.card.teacher{background:var(--card)}
+.card.teacher h2{font-size:1.2rem;color:var(--soft)}
+.heroA{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:center;gap:22px;padding:18px 26px}
+.heroA .pic{width:100%;max-width:300px;justify-self:center;animation:bob 3s ease-in-out infinite}
+.heroA .txt{display:flex;flex-direction:column;gap:14px;min-width:0}
+.trow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.enbadge{font-family:var(--display);background:var(--accent);color:#fff;padding:6px 14px;border-radius:999px;font-size:1.05rem;box-shadow:0 3px 0 var(--accent-dark)}
+.flow.left{justify-content:flex-start}
+@media (max-width:640px){.heroA{grid-template-columns:1fr}.heroA .txt{align-items:center;text-align:center}.flow.left{justify-content:center}}
+.heroA .flow{flex-wrap:nowrap;gap:clamp(4px,.8vw,8px);font-size:clamp(.95rem,2vw,1.25rem)}
+@media (max-width:1000px){.heroA{grid-template-columns:minmax(0,1fr) minmax(0,3fr)}}
+@media (max-width:640px){.heroA .flow{font-size:.8rem}}
+.heroA .flow span{white-space:nowrap;padding:clamp(5px,.8vw,8px) clamp(9px,1.4vw,16px)}
+.heroA .flow i{font-size:1em}
+.linkrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.linkrow .lk{font-family:var(--display);color:var(--ink)}
+.linkrow .url{color:var(--soft);word-break:break-all;min-width:0;font-size:.95rem;background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:6px 10px}
+.copybtn{padding:6px 14px;font-size:.95rem}
+.hint{color:var(--accent-dark);font-size:.85rem}
+textarea#w1,textarea#w2{min-height:150px;line-height:1.6}
+.notice{background:#FFF4D6;border:2px dashed var(--sun-dark);border-radius:16px;padding:12px 16px;color:var(--ink)}
+.tvhint{background:var(--card);color:var(--soft);font-size:.88rem;padding:6px 12px;border-radius:999px}
 </style>
 </head>
 <body>
-<img class="deco d-sheep" src="assets/img/sheep.webp" alt="" aria-hidden="true">
-<img class="deco d-book" src="assets/img/book.webp" alt="" aria-hidden="true">
 <img class="deco d-spark" src="assets/img/sparkle.webp" alt="" aria-hidden="true">
 <div id="app"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -208,13 +246,16 @@ function h(html){const t=document.createElement('template');t.innerHTML=html.tri
 const norm=s=>String(s||'').replace(/[\s.,!?~'"()\-]/g,'').toLowerCase();
 function isMatch(a,b){a=norm(a);b=norm(b);if(!a||!b)return false;return a===b||(a.length>=2&&b.length>=2&&(a.includes(b)||b.includes(a)))}
 const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const RS=()=>(S&&S.demo)?ss:ls; // 실제 수업: 태블릿이 꺼져도 기억, 데모: 탭마다 따로
 const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
 const R=code=>`rooms/${code}`;
 const DEF_WORDS={
- 1:['급식 줄 서기','체육 시간 피구','쉬는 시간 공기놀이','받아쓰기 시험','교실 청소 시간','운동장 축구','도서관에서 책 읽기','우산 쓰고 등교하기','학예회 장기자랑','짝꿍과 귓속말'],
- 2:['선생님의 잔소리','점심시간 술래잡기','미술 시간 물감 놀이','현장체험학습 버스','비 오는 날 실내 놀이','교실 화분 물 주기','학원 가는 길','생일 축하 노래','운동회 이어달리기','시험지 채점']};
-function header(right=''){return `<div class="bar"><div class="brand">꼬리 물기 <span class="tail">그림 릴레이</span></div><div class="row">${right}</div></div>${S&&S.demo?'<div class="demo">데모 모드예요. 이 컴퓨터의 같은 브라우저 탭끼리만 연결돼요. 수업에서 쓰려면 안내서대로 Firebase 설정값을 넣어 주세요.</div>':''}`}
+ 1:['춤추는 바나나 세 개','냉장고 속에 숨은 펭귄','화난 감자','방귀 뀌는 공룡','수염 난 달걀'],
+ 2:['선글라스 낀 닭 두 마리','지붕 위에서 요가하는 소','우는 양파','땀 흘리는 아이스크림','도넛 먹는 강아지']};
+const PAGE_TAG='<span class="pagetag">AI문해력5<br>93쪽</span>';
+function header(right=''){return `<div class="bar"><div class="brand"><img src="assets/img/think-plus.webp" alt="생각 더하기" class="badge"><span>꼬리 물기로 같은 생각하기</span></div><div class="row">${right}</div></div>${S&&S.demo?'<div class="demo">데모 모드예요. 이 컴퓨터의 같은 브라우저 탭끼리만 연결돼요. 수업에서 쓰려면 안내서대로 Firebase 설정값을 넣어 주세요.</div>':''}`}
 const IMG={picnic:'<img class="hero" src="assets/img/picnic.webp" alt="">',wave:'<img class="mascot" src="assets/img/robot-wave.webp" alt="">',rocket:'<img class="mascot" style="width:min(150px,40%)" src="assets/img/robot-rocket.webp" alt="">'};
+const nameOf=pid=>String(pid||'').replace(/^g\d+_/,'');
 const stepType=s=>s%2===0?'draw':'word';
 // 체인 c, 단계 s 의 작성자 = members[(c+s)%n]
 const workerOf=(ch,s)=>ch.members[(ch.c+s)%ch.n];
@@ -259,26 +300,30 @@ function shotHTML(step){
 
 /* ============================== 시작 화면 ============================== */
 function home(){
-  $app.innerHTML=header()+`
+  $app.innerHTML=header(PAGE_TAG)+`
   <div class="stack">
-    <div class="card stack center">${IMG.picnic}
-      <h1>그림 → 단어 → 그림 → 단어</h1>
-      <p class="muted">제시어가 친구들을 거치며 어떻게 바뀌는지 확인해 봐요. (AI 문해력 교과서 93쪽)</p>
+    <div class="card heroA">
+      <img class="pic" src="assets/img/picnic.webp" alt="">
+      <div class="txt">
+        <div class="trow"><h1 class="herotitle">꼬리 물기 놀이</h1><span class="enbadge">Draw &amp; Pass</span></div>
+        <div class="flow left"><span class="s1">제시어</span><i>➜</i><span class="s2">그림 그리기</span><i>➜</i><span class="s3">떠오르는 단어 쓰기</span></div>
+        <p class="muted" style="margin:0">제시어가 친구들을 거치며 얼마나 정확하게 전달되는지 확인해 봅시다.</p>
+      </div>
     </div>
-    <div class="grid2">
-      <div class="card stack">
+    <div class="homegrid">
+      <div class="card stack student">
         <h2>학생으로 들어가기</h2>
         <label>방 번호<input id="jc" inputmode="numeric" maxlength="4" placeholder="예: 4821"></label>
-        <div class="row"><label style="flex:1">모둠<select id="jg">${[1,2,3,4,5,6].map(g=>`<option value="${g}">${g}모둠</option>`).join('')}</select></label>
-        <label style="flex:1">내 번호<input id="jn" inputmode="numeric" maxlength="2" placeholder="예: 7"></label></div>
-        <p class="muted" style="margin:0;font-size:.9rem">이름 대신 번호만 써요.</p>
+        <div class="row"><label style="flex:1">모둠<select id="jg">${[1,2,3,4,5,6,7].map(g=>`<option value="${g}">${g}모둠</option>`).join('')}</select></label>
+        <label style="flex:2">내 이름<input id="jn" maxlength="10" placeholder="예: 김하늘"></label></div>
+        <p class="muted" style="margin:0;font-size:.95rem">내 이름을 정확하게 쓰세요.</p>
         <button class="main big" id="jbtn">들어가기</button>
         <p class="warn" id="jerr" role="alert"></p>
       </div>
-      <div class="card stack">
+      <div class="card stack teacher">
         <h2>선생님</h2>
-        <p class="muted">방을 만들고 제시어와 시간을 정해요. 큰 화면에 띄워 두세요.</p>
-        <button class="big" id="tbtn">새 방 만들기</button>
+        <p class="muted" style="margin:0">방을 만들고 제시어와 시간을 정해요. 큰 화면에 띄워 두세요.</p>
+        <button id="tbtn">새 방 만들기</button>
         <label>만들었던 방 다시 열기<input id="tc" inputmode="numeric" maxlength="4" placeholder="방 번호" value="${esc(ls.get('kkori-teacher')||'')}"></label>
         <button class="ghost" id="tre">다시 열기</button>
       </div>
@@ -290,14 +335,14 @@ function home(){
   document.getElementById('tre').onclick=async()=>{const c=document.getElementById('tc').value.trim();if(await S.get(R(c)+'/state'))teacher(c);};
 }
 async function join(){
-  const code=document.getElementById('jc').value.trim(),g=+document.getElementById('jg').value,n=+document.getElementById('jn').value;
+  const code=document.getElementById('jc').value.trim(),g=+document.getElementById('jg').value,n=document.getElementById('jn').value.replace(/[.#$\[\]\/\s]/g,'').trim();
   const err=document.getElementById('jerr');
   if(!/^\d{4}$/.test(code)){err.textContent='방 번호 4자리를 써 주세요.';return}
-  if(!(n>=1&&n<=40)){err.textContent='내 번호를 1~40 사이 숫자로 써 주세요.';return}
+  if(!n){err.textContent='내 이름을 써 주세요.';return}
   const st=await S.get(R(code)+'/state');if(!st){err.textContent='그 번호의 방이 없어요. 선생님 화면을 다시 확인해 주세요.';return}
-  const pid=`g${g}n${n}`;
-  await S.set(`${R(code)}/players/${pid}`,{group:g,num:n,at:now()});
-  ss.set('kkori-student',JSON.stringify({code,pid}));
+  const pid=`g${g}_${n}`;
+  await S.set(`${R(code)}/players/${pid}`,{group:g,name:n,at:now()});
+  RS().set('kkori-student',JSON.stringify({code,pid}));
   student(code,pid);
 }
 
@@ -331,14 +376,34 @@ function teacher(code){
   const joinUrl=()=>{const u=new URL(location.href);u.search='';u.hash='';return u.toString()};
   function renderLobby(){
     const s=T.settings||{};
+    if(!s.ready||T.showSetup)return renderSetup();
     $app.innerHTML=header(`<span class="pill">선생님 화면</span>`)+`
     <div class="stack">
       <div class="card row" style="justify-content:space-between">
-        <div class="stack" style="gap:6px"><span class="muted">방 번호</span><div class="code">${code}</div>
-        <span class="muted" style="font-size:.95rem;word-break:break-all">${esc(joinUrl())}</span></div>
+        <div class="stack" style="gap:6px;min-width:0"><span class="muted">방 번호</span><div class="code">${code}</div>
+        <div class="linkrow"><span class="lk">링크 주소:</span><span class="url" id="jurl">${esc(joinUrl()+'?room='+code)}</span><button class="copybtn" id="cpy" type="button">복사</button></div></div>
         <div id="qr" aria-label="접속 QR"></div>
       </div>
       <div class="card stack"><div class="row" style="justify-content:space-between"><h2>들어온 친구들</h2><span class="pill" id="pc"></span></div><div class="groups" id="gl"></div><p class="warn" id="gw" style="margin:0"></p></div>
+      <div class="row" style="justify-content:space-between">
+        <span class="row"><button class="ghost" id="setb">설정 바꾸기</button><span class="tvhint">제시어가 보이니 TV 화면을 끄고 누르세요</span></span>
+        <span class="row"><button class="ghost" id="del">방 지우기</button><button class="main big" id="go">1라운드 시작 (질문 금지)</button></span>
+      </div>
+    </div>`;
+    document.getElementById('cpy').onclick=async()=>{const b=document.getElementById('cpy'),t=document.getElementById('jurl').textContent;
+      try{await navigator.clipboard.writeText(t);b.textContent='복사됨 ✓'}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('jurl'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);try{document.execCommand('copy');b.textContent='복사됨 ✓'}catch(_){b.textContent='Ctrl+C로 복사'}}
+      setTimeout(()=>{b.textContent='복사'},2000)};
+    try{if(window.QRCode)new QRCode(document.getElementById('qr'),{text:joinUrl()+'?room='+code,width:150,height:150})}catch(e){}
+    renderLobbyPlayers();
+    document.getElementById('go').onclick=()=>startRound(1);
+    document.getElementById('setb').onclick=()=>{T.showSetup=true;renderLobby()};
+    document.getElementById('del').onclick=()=>delRoom();
+  }
+  function renderSetup(){
+    const s=T.settings||{};
+    $app.innerHTML=header(`<span class="pill on">1단계 · 게임 설정</span>`)+`
+    <div class="stack">
+      <div class="notice">아직 TV에 띄우지 마세요. 설정을 마치고 <b>[설정 완료, 방 열기]</b>를 누르면 아이들에게 보여 줄 화면(방 번호·QR)이 나와요.</div>
       <div class="card stack"><h2>게임 설정</h2>
         <div class="row">
           <label>단계 수 (그림·단어 합)<select id="s_steps">${[2,3,4,5,6].map(x=>`<option ${x===(s.steps||4)?'selected':''}>${x}</option>`).join('')}</select></label>
@@ -347,27 +412,25 @@ function teacher(code){
           <label>2라운드 질문 시간 추가(초)<input id="s_q" type="number" min="0" max="90" value="${s.qSec??20}" style="width:110px"></label>
         </div>
         <div class="grid2">
-          <label>1라운드 제시어 (한 줄에 하나)<textarea id="w1">${esc((s.words&&s.words[1]||DEF_WORDS[1]).join('\n'))}</textarea></label>
-          <label>2라운드 제시어 (한 줄에 하나)<textarea id="w2">${esc((s.words&&s.words[2]||DEF_WORDS[2]).join('\n'))}</textarea></label>
+          <label>1라운드 제시어 <small class="hint">(클릭해서 수정하세요 · 한 줄에 하나)</small><textarea id="w1">${esc((s.words&&s.words[1]||DEF_WORDS[1]).join('\n'))}</textarea></label>
+          <label>2라운드 제시어 <small class="hint">(클릭해서 수정하세요 · 한 줄에 하나)</small><textarea id="w2">${esc((s.words&&s.words[2]||DEF_WORDS[2]).join('\n'))}</textarea></label>
         </div>
         <p class="muted" style="margin:0;font-size:.92rem">모둠 안에서 모두 동시에 시작해요. 각자 다른 제시어를 받아서 그림 → 옆 친구가 단어 → 다음 친구가 그림 순서로 넘어가요. 단계 수가 모둠 인원보다 많으면 모둠 인원만큼만 진행해요.</p>
       </div>
-      <div class="row" style="justify-content:flex-end"><button class="ghost" id="del">방 지우기</button><button class="main big" id="go">1라운드 시작 (질문 금지)</button></div>
+      <div class="row" style="justify-content:flex-end"><button class="ghost" id="del">방 지우기</button><button class="main big" id="done">설정 완료, 방 열기</button></div>
     </div>`;
-    try{if(window.QRCode)new QRCode(document.getElementById('qr'),{text:joinUrl()+'?room='+code,width:150,height:150})}catch(e){}
-    renderLobbyPlayers();
-    document.getElementById('go').onclick=async()=>{await saveSettings();startRound(1)};
+    document.getElementById('done').onclick=async()=>{await saveSettings();T.showSetup=false;renderLobby()};
     document.getElementById('del').onclick=()=>delRoom();
   }
   async function saveSettings(){
     const words=r=>document.getElementById('w'+r).value.split('\n').map(x=>x.trim()).filter(Boolean);
-    const st={steps:+document.getElementById('s_steps').value,drawSec:+document.getElementById('s_draw').value||60,wordSec:+document.getElementById('s_word').value||30,qSec:+document.getElementById('s_q').value||0,words:{1:words(1).length?words(1):DEF_WORDS[1],2:words(2).length?words(2):DEF_WORDS[2]}};
+    const st={steps:+document.getElementById('s_steps').value,drawSec:+document.getElementById('s_draw').value||60,wordSec:+document.getElementById('s_word').value||30,ready:true,qSec:+document.getElementById('s_q').value||0,words:{1:words(1).length?words(1):DEF_WORDS[1],2:words(2).length?words(2):DEF_WORDS[2]}};
     T.settings=st;await S.set(R(code)+'/settings',st);
   }
-  function groupsOf(){const g={};for(const[pid,p]of Object.entries(T.players||{})){(g[p.group]=g[p.group]||[]).push({pid,...p})}for(const k in g)g[k].sort((a,b)=>a.num-b.num);return g}
+  function groupsOf(){const g={};for(const[pid,p]of Object.entries(T.players||{})){(g[p.group]=g[p.group]||[]).push({pid,...p})}for(const k in g)g[k].sort((a,b)=>String(a.name).localeCompare(String(b.name),'ko'));return g}
   function renderLobbyPlayers(){
     const gl=document.getElementById('gl');if(!gl)return;const g=groupsOf();const keys=Object.keys(g).sort((a,b)=>a-b);
-    gl.innerHTML=keys.length?keys.map(k=>`<div class="grp"><b>${k}모둠</b> <span class="muted">${g[k].length}명</span><div class="chips">${g[k].map(p=>`<span class="chip">${p.num}번</span>`).join('')}</div></div>`).join(''):'<p class="muted">아직 아무도 없어요. 방 번호를 알려 주세요.</p>';
+    gl.innerHTML=keys.length?keys.map(k=>`<div class="grp"><b>${k}모둠</b> <span class="muted">${g[k].length}명</span><div class="chips">${g[k].map(p=>`<span class="chip">${esc(p.name)}</span>`).join('')}</div></div>`).join(''):'<p class="muted">아직 아무도 없어요. 방 번호를 알려 주세요.</p>';
     document.getElementById('pc').textContent=`${Object.keys(T.players||{}).length}명`;
     const small=keys.filter(k=>g[k].length<2);document.getElementById('gw').textContent=small.length?`${small.join(', ')}모둠은 1명이라 게임을 할 수 없어요. 다른 모둠으로 옮겨 주세요.`:'';
   }
@@ -458,7 +521,7 @@ function teacher(code){
       <div class="album">
       <div class="prompt"><small>처음 제시어</small>${esc(ch.start)}</div>`;
     for(let s=0;s<ch.L&&s<T.album.reveal;s++){const st=steps[s],w=workerOf(ch,s),q=qa[`${T.album.chain}_${s}`];
-      html+=`<div class="step"><span class="who">${s+1}단계 · ${esc(w.replace(/g\d+n/,''))}번 ${stepType(s)==='draw'?'그림':'단어'}</span>${q&&q.q?`<div class="qa"><div class="q">질문: ${esc(q.q)}</div><div class="a">${q.a?'대답: '+esc(q.a):'(대답 못 받음)'}</div></div>`:''}${shotHTML(st)}</div>`}
+      html+=`<div class="step"><span class="who">${s+1}단계 · ${esc(nameOf(w))} ${stepType(s)==='draw'?'그림':'단어'}</span>${q&&q.q?`<div class="qa"><div class="q">질문: ${esc(q.q)}</div><div class="a">${q.a?'대답: '+esc(q.a):'(대답 못 받음)'}</div></div>`:''}${shotHTML(st)}</div>`}
     const fin=T.album.reveal>=ch.L;
     html+=`</div><div class="row" style="justify-content:center">${fin?'':`<button class="main big" id="rv">다음 장 보기 (${T.album.reveal}/${ch.L})</button>`}${fin?`<button class="ghost" id="rva">처음부터</button>`:`<button class="ghost" id="rvall">전부 보기</button>`}</div>`;
     if(fin)html+=`<div class="row" style="justify-content:center"><span>처음과 마지막이</span><button class="match yes" id="my">일치 ${m===true?'✓':''}</button><button class="match no" id="mn">불일치 ${m===false?'✓':''}</button></div>
@@ -491,7 +554,7 @@ function teacher(code){
 /* ============================== 학생 ============================== */
 function student(code,pid){
   const P={state:null,meta:null,metaRound:null,view:null,pad:null,input:null,submitted:false,unq:null,unans:null,players:{}};
-  const me={group:+pid.match(/g(\d+)/)[1],num:+pid.match(/n(\d+)/)[1]};
+  const me={group:+pid.match(/^g(\d+)_/)[1],name:nameOf(pid)};
   let tick=setInterval(timer,500);
   S.on(R(code)+'/state',v=>{if(!v){$app.innerHTML=header()+'<div class="card center"><h2>방이 끝났어요</h2></div>';return}P.state=v;route()});
   S.on(R(code)+'/players',v=>{P.players=v||{};if(P.state&&P.state.phase==='lobby')lobby()});
@@ -509,22 +572,22 @@ function student(code,pid){
     if(P.view!==k&&st.phase==='play'){P.view=k;P.submitted=false;await play()}
   }
   function lobby(){
-    const mates=Object.entries(P.players).filter(([,p])=>p.group===me.group).map(([,p])=>p.num).sort((a,b)=>a-b);
-    $app.innerHTML=header(`<span class="pill">${me.group}모둠 · ${me.num}번</span>`)+`<div class="card stack center">${IMG.wave}<h1>곧 시작해요!</h1><p class="muted">선생님이 시작하면 화면이 바뀌어요.</p><div class="chips" style="justify-content:center">${mates.map(n=>`<span class="chip">${n}번</span>`).join('')}</div><p class="muted" style="margin:0">우리 모둠에 들어온 친구들</p></div>`;
+    const mates=Object.entries(P.players).filter(([,p])=>p.group===me.group).map(([,p])=>p.name).sort((a,b)=>String(a).localeCompare(String(b),'ko'));
+    $app.innerHTML=header(`<span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+`<div class="card stack center">${IMG.wave}<h1>곧 시작해요!</h1><p class="muted">선생님이 시작하면 화면이 바뀌어요.</p><div class="chips" style="justify-content:center">${mates.map(n=>`<span class="chip">${esc(n)}</span>`).join('')}</div><p class="muted" style="margin:0">우리 모둠에 들어온 친구들</p></div>`;
   }
   function clearQ(){if(P.unq){P.unq();P.unq=null}if(P.unans){P.unans();P.unans=null}document.querySelectorAll('.modalBg.qm').forEach(x=>x.remove())}
   async function play(){
     clearQ();const st=P.state,s=st.step,mc=myChain(s);
-    if(!mc){$app.innerHTML=header()+'<div class="card center stack"><h2>이번 라운드에는 들어가 있지 않아요</h2><p class="muted">선생님께 말해 주세요.</p></div>';return}
+    if(!mc){$app.innerHTML=header()+`<div class="card center stack"><h2>이번 라운드 명단에 내 이름이 없어요</h2><p class="muted" style="margin:0">처음 들어올 때와 <b>모둠·이름을 똑같이</b> 써야 이어서 할 수 있어요.<br>이번 라운드 중간에 처음 들어왔다면 다음 라운드부터 함께해요.</p><button class="main" id="rej">다시 들어가기</button></div>`;document.getElementById('rej').onclick=()=>{location.href=location.pathname+'?room='+code+'&new=1'};return}
     const{id,ch}=mc;
-    if(s>=ch.L){$app.innerHTML=header(`<span class="pill">${me.group}모둠 · ${me.num}번</span>`)+'<div class="card center stack">'+IMG.rocket+'<h2>우리 모둠은 끝났어요!</h2><p class="muted">다른 모둠을 기다리는 중이에요.</p></div>';return}
+    if(s>=ch.L){$app.innerHTML=header(`<span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+'<div class="card center stack">'+IMG.rocket+'<h2>우리 모둠은 끝났어요!</h2><p class="muted">다른 모둠을 기다리는 중이에요.</p></div>';return}
     const type=stepType(s);let prev=null;if(s>0)prev=await S.get(`${R(code)}/rounds/${st.round}/steps/${id}/${s-1}`);
     const prevAuthor=s>0?workerOf(ch,s-1):null;
     let top='';
     if(s===0)top=`<div class="prompt"><small>제시어</small>${esc(ch.start)}</div>`;
     else if(type==='draw')top=`<div class="prompt"><small>친구가 쓴 단어</small>${esc(prev&&prev.text||'(빈칸)')}</div>`;
     else top=`<div class="stack"><div class="prompt" style="font-size:1.3rem">친구 그림을 보고 무엇인지 단어로 써요</div>${shotHTML(prev)}</div>`;
-    $app.innerHTML=header(`<span class="pill on">${st.round}라운드 · ${s+1}/${ch.L}</span><span class="pill">${me.group}모둠 · ${me.num}번</span><span class="timer" id="tm" style="font-size:1.5rem"></span>`)+`
+    $app.innerHTML=header(`<span class="pill on">${st.round}라운드 · ${s+1}/${ch.L}</span><span class="pill">${me.group}모둠 · ${esc(me.name)}</span><span class="timer" id="tm" style="font-size:1.5rem"></span>`)+`
       <div class="stack" id="work">${top}<div id="qbox"></div><div id="tool" class="stack"></div>
       <div class="row" style="justify-content:center"><button class="main big" id="sb">다 했어요</button></div></div>`;
     const tool=document.getElementById('tool');
@@ -532,9 +595,9 @@ function student(code,pid){
     document.getElementById('sb').onclick=()=>submit(false);
     // 2라운드: 앞 친구에게 질문 1번
     if(st.q&&s>0&&prevAuthor){
-      const qk=`${R(code)}/rounds/${st.round}/qa/${id}_${s}`;const pn=prevAuthor.replace(/g\d+n/,'');
+      const qk=`${R(code)}/rounds/${st.round}/qa/${id}_${s}`;const pn=nameOf(prevAuthor);
       const qbox=document.getElementById('qbox');
-      qbox.innerHTML=`<div class="qa row" style="justify-content:space-between"><span>앞 친구(${pn}번)에게 <b>딱 한 번</b> 물어볼 수 있어요.</span><span class="row" id="qa_in"><input id="qq" maxlength="40" placeholder="예: 몇 개야? 사람이야 동물이야?"><button id="qs">질문하기</button></span></div>`;
+      qbox.innerHTML=`<div class="qa row" style="justify-content:space-between"><span>앞 친구(${esc(pn)})에게 <b>딱 한 번</b> 물어볼 수 있어요.</span><span class="row" id="qa_in"><input id="qq" maxlength="40" placeholder="예: 몇 개야? 사람이야 동물이야?"><button id="qs">질문하기</button></span></div>`;
       document.getElementById('qs').onclick=async()=>{const v=document.getElementById('qq').value.trim();if(!v)return;await S.set(qk,{q:v,from:pid,to:prevAuthor});};
       P.unans=S.on(qk,v=>{if(!v||!v.q)return;const box=document.getElementById('qa_in');if(box)box.outerHTML=`<span><span class="q" style="color:var(--blue)">질문: ${esc(v.q)}</span><br><span style="color:var(--green)">${v.a?'대답: '+esc(v.a):'대답을 기다리는 중…'}</span></span>`;else{const sp=qbox.querySelector('.qa');if(sp)sp.innerHTML=`<span><span style="color:var(--blue)">질문: ${esc(v.q)}</span><br><span style="color:var(--green)">${v.a?'대답: '+esc(v.a):'대답을 기다리는 중…'}</span></span>`}});
     }
@@ -547,8 +610,8 @@ function student(code,pid){
         P.unq=S.on(qk2,async v=>{
           if(!v||!v.q||v.a||document.querySelector('.modalBg.qm'))return;
           const mine=await S.get(`${R(code)}/rounds/${st.round}/steps/${mineId}/${s-1}`);
-          const fromN=String(v.from||'').replace(/g\d+n/,'');
-          const bg=h(`<div class="modalBg qm" role="dialog" aria-label="질문 도착"><div class="modal stack"><h2>${esc(fromN)}번 친구가 물어봐요!</h2><div class="qa"><span class="q">${esc(v.q)}</span></div><p class="muted" style="margin:0">내가 만든 것:</p>${shotHTML(mine)}<input id="an" maxlength="40" placeholder="짧게 대답해요"><button class="main" id="ab2">대답 보내기</button></div></div>`);
+          const fromN=nameOf(v.from);
+          const bg=h(`<div class="modalBg qm" role="dialog" aria-label="질문 도착"><div class="modal stack"><h2>${esc(fromN)} 친구가 물어봐요!</h2><div class="qa"><span class="q">${esc(v.q)}</span></div><p class="muted" style="margin:0">내가 만든 것:</p>${shotHTML(mine)}<input id="an" maxlength="40" placeholder="짧게 대답해요"><button class="main" id="ab2">대답 보내기</button></div></div>`);
           document.body.appendChild(bg);const inp=bg.querySelector('#an');inp.focus();
           bg.querySelector('#ab2').onclick=async()=>{const a=inp.value.trim();if(!a)return;await S.update(qk2,{a});bg.remove()};
         });
@@ -569,9 +632,9 @@ function student(code,pid){
     const steps=(await S.get(`${R(code)}/rounds/${r}/steps`))||{};
     let sel=ids[0];
     const draw=()=>{const ch=P.meta[sel],st=steps[sel]||{};
-      $app.innerHTML=header(`<span class="pill on">${r}라운드 앨범</span><span class="pill">${me.group}모둠 · ${me.num}번</span>`)+`<div class="stack"><div class="card center"><h2>선생님 화면을 함께 봐요</h2><p class="muted" style="margin:0">우리 모둠 앨범은 여기서도 볼 수 있어요.</p></div>
+      $app.innerHTML=header(`<span class="pill on">${r}라운드 앨범</span><span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+`<div class="stack"><div class="card center"><h2>선생님 화면을 함께 봐요</h2><p class="muted" style="margin:0">우리 모둠 앨범은 여기서도 볼 수 있어요.</p></div>
       <div class="tabs">${ids.map(id=>`<button data-c="${id}" class="${id===sel?'sel':''}">${esc(P.meta[id].start)}</button>`).join('')}</div>
-      <div class="card album"><div class="prompt"><small>처음 제시어</small>${esc(ch.start)}</div>${Array.from({length:ch.L},(_,s)=>`<div class="step"><span class="who">${s+1}단계 · ${esc(workerOf(ch,s).replace(/g\d+n/,''))}번</span>${shotHTML(st[s])}</div>`).join('')}</div></div>`;
+      <div class="card album"><div class="prompt"><small>처음 제시어</small>${esc(ch.start)}</div>${Array.from({length:ch.L},(_,s)=>`<div class="step"><span class="who">${s+1}단계 · ${esc(nameOf(workerOf(ch,s)))}</span>${shotHTML(st[s])}</div>`).join('')}</div></div>`;
       document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{sel=b.dataset.c;draw()})};
     if(sel)draw();
   }
@@ -581,9 +644,9 @@ function student(code,pid){
 (async()=>{
   try{S=FIREBASE_CONFIG?await firebaseStore(FIREBASE_CONFIG):demoStore()}
   catch(e){$app.innerHTML='<div class="card"><h2>연결하지 못했어요</h2><p>인터넷 연결이나 Firebase 설정값을 확인해 주세요.</p></div>';return}
-  const saved=(()=>{try{return JSON.parse(ss.get('kkori-student')||'null')}catch(e){return null}})();
+  const saved=(()=>{try{return JSON.parse(RS().get('kkori-student')||'null')}catch(e){return null}})();
   const q=new URLSearchParams(location.search);
-  if(saved&&!q.get('room')&&!q.get('new')&&(await S.get(R(saved.code)+'/players/'+saved.pid))){student(saved.code,saved.pid);return}
+  if(saved&&(!q.get('room')||q.get('room')===saved.code)&&!q.get('new')&&(await S.get(R(saved.code)+'/players/'+saved.pid))){student(saved.code,saved.pid);return}
   home();
 })();
 </script>
