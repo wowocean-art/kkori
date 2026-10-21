@@ -90,6 +90,9 @@ button:disabled{opacity:.45;cursor:default}
 .canvasWrap{background:#fff;border:2px solid var(--line);border-radius:14px;overflow:hidden;touch-action:none;width:100%;max-width:720px;margin:0 auto;aspect-ratio:4/3}
 .canvasWrap canvas{width:100%;height:100%;display:block;touch-action:none}
 .tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.palette{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;width:100%;max-width:600px;margin:0 auto}
+.palette .sw{width:100%;height:auto;aspect-ratio:1}
+.sw.white{outline:1px solid #bbb;outline-offset:-4px}
 .sw{width:40px;height:40px;border-radius:50%;border:3px solid transparent;padding:0}
 .sw.sel{border-color:var(--ink)}
 .tool{padding:8px 14px;font-size:1rem}
@@ -196,6 +199,24 @@ button.ghost{background:var(--card);border:2px solid var(--line)}
 textarea#w1,textarea#w2{min-height:150px;line-height:1.6}
 .notice{background:#FFF4D6;border:2px dashed var(--sun-dark);border-radius:16px;padding:12px 16px;color:var(--ink)}
 .tvhint{background:var(--card);color:var(--soft);font-size:.88rem;padding:6px 12px;border-radius:999px}
+
+.stage{display:flex;flex-direction:column;gap:14px;min-height:260px;padding:6px 2px}
+.stagehint{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--soft);margin:auto}
+.stagehint .mascot{width:min(170px,40%)}
+.bub{display:flex;flex-direction:column;gap:6px;align-items:center}
+.bub.first{align-self:center;background:var(--sun);border-radius:22px;padding:12px 28px;box-shadow:0 4px 0 var(--sun-dark);font-family:var(--display);font-size:clamp(1.6rem,3.4vw,2.4rem);text-align:center}
+.bub.first small{display:block;font-family:var(--body);font-size:.9rem;color:var(--wood-dark)}
+.bub .who{font-size:.95rem;color:var(--soft);font-family:var(--display)}
+.bub .say{position:relative;background:#fff;border:3px solid var(--line);border-radius:22px;padding:14px 28px;font-family:var(--display);font-size:clamp(1.6rem,3.4vw,2.4rem)}
+.bub .say::after{content:"";position:absolute;left:50%;top:-14px;margin-left:-10px;border:10px solid transparent;border-bottom-color:var(--line)}
+.bub .shot{max-width:520px}
+.pop{animation:popin .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popin{from{opacity:0;transform:translateY(24px) scale(.85)}to{opacity:1;transform:none}}
+.ctl{justify-content:center}
+.result{display:flex;flex-direction:column;gap:12px;margin-top:6px;padding-top:14px;border-top:2px dashed var(--line)}
+.vs{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--display);font-size:clamp(1.3rem,2.8vw,2rem)}
+.vs span{padding:8px 18px;border-radius:999px}.vs .b1{background:var(--sun)}.vs .b2{background:#D8F2D0}.vs i{font-style:normal;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}}
 </style>
 </head>
 <body>
@@ -282,14 +303,15 @@ function makeCanvas(wrap){
 function drawUI(container){
   const wrap=h('<div class="canvasWrap"></div>');
   const pad=makeCanvas(wrap);
-  const colors=['#2B2A33','#D9463B','#3C6FD8','#2F9E62','#F2B705','#8B5A2B','#E86FA8'];
-  const tools=h('<div class="tools"></div>');
-  colors.forEach((c,i)=>{const b=h(`<button class="sw${i===0?' sel':''}" aria-label="색 ${i+1}" style="background:${c}"></button>`);b.onclick=()=>{pad.setColor(c);tools.querySelectorAll('.sw,.tool.er').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};tools.appendChild(b)});
+  const colors=[['검정','#222222'],['회색','#8E8E8E'],['흰색','#FFFFFF'],['빨강','#E53935'],['다홍','#FF6F4F'],['주황','#FB8C00'],['노랑','#FDD835'],['연노랑','#FFF59D'],['연두','#9CCC65'],['초록','#2E9E4F'],['진초록','#1B5E20'],['청록','#00897B'],
+    ['하늘','#5EC8F2'],['파랑','#1E63D6'],['남색','#26327A'],['연보라','#B39DDB'],['보라','#7B1FA2'],['자주','#B0186A'],['분홍','#F48FB1'],['살구','#FFD3B0'],['진한 살구','#E9A979'],['황토','#C99A3B'],['갈색','#8D5524'],['고동','#4E2E14']];
+  const pal=h('<div class="palette"></div>'),tools=h('<div class="tools"></div>');
+  colors.forEach(([n,c],i)=>{const b=h(`<button class="sw${i===0?' sel':''}${c==='#FFFFFF'?' white':''}" aria-label="${n}" title="${n}" style="background:${c}"></button>`);b.onclick=()=>{pad.setColor(c);pal.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));tools.querySelectorAll('.tool.er').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};pal.appendChild(b)});
   [['가늘게',4],['보통',8],['굵게',16]].forEach(([t,s])=>{const b=h(`<button class="tool sz${s===8?' sel':''}">${t}</button>`);b.onclick=()=>{pad.setSize(s);tools.querySelectorAll('.sz').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};tools.appendChild(b)});
-  const er=h('<button class="tool er">지우개</button>');er.onclick=()=>{pad.setEraser();tools.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));er.classList.add('sel')};tools.appendChild(er);
+  const er=h('<button class="tool er">지우개</button>');er.onclick=()=>{pad.setEraser();pal.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));er.classList.add('sel')};tools.appendChild(er);
   const un=h('<button class="tool">되돌리기</button>');un.onclick=()=>pad.undo();tools.appendChild(un);
   const cl=h('<button class="tool">전부 지우기</button>');cl.onclick=()=>pad.clear();tools.appendChild(cl);
-  container.appendChild(wrap);container.appendChild(tools);
+  container.appendChild(wrap);container.appendChild(pal);container.appendChild(tools);
   return pad;
 }
 function shotHTML(step){
@@ -362,7 +384,7 @@ function teacher(code){
   function bindRound(r){if(boundRound===r)return;boundRound=r;[unMeta,unDone,unMatch,unQa].forEach(f=>f&&f());
     unMeta=S.on(`${R(code)}/rounds/${r}/meta`,v=>{T.meta[r]=v||{};});
     unDone=S.on(`${R(code)}/rounds/${r}/done`,v=>{T.done[r]=v||{};updatePlay()});
-    unMatch=S.on(`${R(code)}/rounds/${r}/match`,v=>{T.match[r]=v||{};if(T.state&&T.state.phase==='album')renderAlbumBody()});
+    unMatch=S.on(`${R(code)}/rounds/${r}/match`,v=>{T.match[r]=v||{};if(T.state&&T.state.phase==='album'&&T.album&&T.album.refreshMarks)T.album.refreshMarks()});
     unQa=S.on(`${R(code)}/rounds/${r}/qa`,v=>{T.qa=T.qa||{};T.qa[r]=v||{}});}
   function render(){
     const st=T.state;if(!st)return;
@@ -511,27 +533,51 @@ function teacher(code){
     document.getElementById('del').onclick=()=>delRoom();
     renderAlbumBody();
   }
+  function albumItems(r,id){const ch=T.meta[r][id],steps=(T.steps[r]||{})[id]||{},qa=(T.qa&&T.qa[r])||{};
+    const it=[{first:true,text:ch.start,label:'처음 제시어'}];
+    for(let s=0;s<ch.L;s++)it.push({kind:stepType(s),step:steps[s],who:nameOf(workerOf(ch,s)),qa:qa[`${id}_${s}`]});return it}
+  const ownerOf=ch=>nameOf(workerOf(ch,0));
+  function bubbleHTML(x){
+    if(x.first)return `<div class="bub first"><small>${esc(x.label)}</small><div>${esc(x.text||'(빈칸)')}</div></div>`;
+    const qa=x.qa&&x.qa.q?`<div class="qa"><div class="q">질문: ${esc(x.qa.q)}</div><div class="a">${x.qa.a?'대답: '+esc(x.qa.a):'(대답 못 받음)'}</div></div>`:'';
+    const body=x.kind==='draw'?(x.step&&x.step.img?`<img class="shot" alt="${esc(x.who)}의 그림" src="${x.step.img}">`:'<div class="shot ph">(시간 안에 못 그렸어요)</div>')
+      :`<div class="say">${esc(x.step&&x.step.text||'(빈칸)')}</div>`;
+    return `<div class="bub ${x.kind}"><span class="who">${esc(x.who)} ${x.kind==='draw'?'그림':'단어'}</span>${qa}${body}</div>`;
+  }
   function renderAlbumBody(){
     const box=document.getElementById('ab');if(!box)return;const r=T.state.round;const meta=T.meta[r]||{};
+    if(T.album.timer){clearInterval(T.album.timer);T.album.timer=null}
+    T.album.played=T.album.played||{};
     const ids=Object.keys(meta).filter(id=>meta[id].group===T.album.g).sort((a,b)=>meta[a].c-meta[b].c);
     if(T.album.chain==null||!ids.includes(T.album.chain)){T.album.chain=ids[0];T.album.reveal=0}
-    const ch=meta[T.album.chain],steps=T.steps[r][T.album.chain]||{},qa=(T.qa&&T.qa[r])||{};
-    const m=autoMatch(r,T.album.chain);
-    let html=`<div class="card stack"><div class="tabs">${ids.map(id=>{const mm=autoMatch(r,id);return `<button data-c="${id}" class="${id===T.album.chain?'sel':''}">${esc(meta[id].start)} ${mm===true?'○':mm===false?'×':''}</button>`}).join('')}</div>
-      <div class="album">
-      <div class="prompt"><small>처음 제시어</small>${esc(ch.start)}</div>`;
-    for(let s=0;s<ch.L&&s<T.album.reveal;s++){const st=steps[s],w=workerOf(ch,s),q=qa[`${T.album.chain}_${s}`];
-      html+=`<div class="step"><span class="who">${s+1}단계 · ${esc(nameOf(w))} ${stepType(s)==='draw'?'그림':'단어'}</span>${q&&q.q?`<div class="qa"><div class="q">질문: ${esc(q.q)}</div><div class="a">${q.a?'대답: '+esc(q.a):'(대답 못 받음)'}</div></div>`:''}${shotHTML(st)}</div>`}
-    const fin=T.album.reveal>=ch.L;
-    html+=`</div><div class="row" style="justify-content:center">${fin?'':`<button class="main big" id="rv">다음 장 보기 (${T.album.reveal}/${ch.L})</button>`}${fin?`<button class="ghost" id="rva">처음부터</button>`:`<button class="ghost" id="rvall">전부 보기</button>`}</div>`;
-    if(fin)html+=`<div class="row" style="justify-content:center"><span>처음과 마지막이</span><button class="match yes" id="my">일치 ${m===true?'✓':''}</button><button class="match no" id="mn">불일치 ${m===false?'✓':''}</button></div>
-      <p class="center muted" style="margin:0">어떤 정보가 빠졌거나 달라졌나요? 더 정확하게 전하려면 무엇을 덧붙이면 좋을까요?</p>`;
-    html+='</div>';box.innerHTML=html;
-    box.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{T.album.chain=b.dataset.c;T.album.reveal=0;renderAlbumBody()});
-    const rv=document.getElementById('rv');if(rv)rv.onclick=()=>{T.album.reveal++;renderAlbumBody()};
-    const ra=document.getElementById('rvall');if(ra)ra.onclick=()=>{T.album.reveal=ch.L;renderAlbumBody()};
-    const r0=document.getElementById('rva');if(r0)r0.onclick=()=>{T.album.reveal=0;renderAlbumBody()};
-    const my=document.getElementById('my');if(my){my.onclick=()=>S.set(`${R(code)}/rounds/${r}/match/${T.album.chain}`,true);document.getElementById('mn').onclick=()=>S.set(`${R(code)}/rounds/${r}/match/${T.album.chain}`,false)}
+    const id=T.album.chain,ch=meta[id],items=albumItems(r,id);
+    box.innerHTML=`<div class="card stack">
+      <div class="tabs" id="ct">${ids.map(x=>`<button data-c="${x}" class="${x===id?'sel':''}">${esc(ownerOf(meta[x]))}의 앨범${T.album.played[x]?' ✓':''}</button>`).join('')}</div>
+      <div class="stage" id="stage"></div>
+      <div id="res"></div></div>`;
+    const stage=document.getElementById('stage');
+    stage.innerHTML=items.map(bubbleHTML).join('');T.album.played[id]=true;
+    function finish(){
+      const m=autoMatch(r,id);const last=items[items.length-1];
+      const lastTxt=last.kind==='word'?(last.step&&last.step.text||'(빈칸)'):'(그림)';
+      document.getElementById('res').innerHTML=`<div class="result pop">
+        <div class="vs"><span class="b1">${esc(items[0].text||'')}</span><i>➜</i><span class="b2">${esc(lastTxt)}</span></div>
+        <div class="row" style="justify-content:center"><span>처음과 마지막이</span><button class="match yes" id="my">일치 <span id="mky">${m===true?'✓':''}</span></button><button class="match no" id="mn">불일치 <span id="mkn">${m===false?'✓':''}</span></button></div>
+        <p class="center muted" style="margin:0">어떤 정보가 빠졌거나 달라졌나요? 더 정확하게 전하려면 무엇을 덧붙이면 좋을까요?</p>
+        <div class="row" style="justify-content:center"><button class="main" id="nextc">다음 친구 앨범 ▶</button></div></div>`;
+      document.getElementById('my').onclick=()=>S.set(`${R(code)}/rounds/${r}/match/${id}`,true);
+      document.getElementById('mn').onclick=()=>S.set(`${R(code)}/rounds/${r}/match/${id}`,false);
+      document.getElementById('nextc').onclick=()=>{const i=ids.indexOf(id);
+        if(i<ids.length-1){T.album.chain=ids[i+1];T.album.reveal=0;renderAlbumBody();toTop()}
+        else{const gs=[...document.querySelectorAll('#gt button')].map(b=>+b.dataset.g);const gi=gs.indexOf(T.album.g);
+          if(gi<gs.length-1){T.album.g=gs[gi+1];T.album.chain=null;document.querySelectorAll('#gt button').forEach(x=>x.classList.toggle('sel',+x.dataset.g===T.album.g));renderAlbumBody();toTop()}
+          else document.getElementById('nextc').textContent='모든 앨범을 봤어요!'}};
+      const t=document.querySelector(`#ct [data-c="${id}"]`);if(t&&!t.textContent.includes('✓'))t.textContent+=' ✓';
+    }
+    finish();
+    T.album.refreshMarks=()=>{const m=autoMatch(r,id);const a=document.getElementById('mky'),b=document.getElementById('mkn');if(a){a.textContent=m===true?'✓':'';b.textContent=m===false?'✓':''}};
+    function toTop(){requestAnimationFrame(()=>{const c=document.getElementById('ct');if(c)c.scrollIntoView({behavior:'smooth',block:'start'})})}
+    document.querySelectorAll('#ct [data-c]').forEach(b=>b.onclick=()=>{T.album.chain=b.dataset.c;T.album.reveal=0;renderAlbumBody()});
   }
   async function showCompare(){
     const rows=[];
@@ -628,15 +674,29 @@ function student(code,pid){
   }
   function timer(){const t=document.getElementById('tm');if(!t||!P.state||P.state.phase!=='play')return;const left=Math.max(0,Math.ceil((P.state.deadline-now())/1000));t.textContent=`${left}초`;t.classList.toggle('low',left<=10)}
   async function album(){
-    clearQ();const r=P.state.round;const ids=Object.keys(P.meta).filter(id=>P.meta[id].group===me.group).sort((a,b)=>P.meta[a].c-P.meta[b].c);
-    const steps=(await S.get(`${R(code)}/rounds/${r}/steps`))||{};
-    let sel=ids[0];
-    const draw=()=>{const ch=P.meta[sel],st=steps[sel]||{};
-      $app.innerHTML=header(`<span class="pill on">${r}라운드 앨범</span><span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+`<div class="stack"><div class="card center"><h2>선생님 화면을 함께 봐요</h2><p class="muted" style="margin:0">우리 모둠 앨범은 여기서도 볼 수 있어요.</p></div>
-      <div class="tabs">${ids.map(id=>`<button data-c="${id}" class="${id===sel?'sel':''}">${esc(P.meta[id].start)}</button>`).join('')}</div>
-      <div class="card album"><div class="prompt"><small>처음 제시어</small>${esc(ch.start)}</div>${Array.from({length:ch.L},(_,s)=>`<div class="step"><span class="who">${s+1}단계 · ${esc(nameOf(workerOf(ch,s)))}</span>${shotHTML(st[s])}</div>`).join('')}</div></div>`;
+    clearQ();const r=P.state.round;
+    const ids=Object.keys(P.meta).filter(id=>P.meta[id].group===me.group).sort((a,b)=>P.meta[a].c-P.meta[b].c);
+    const all=(await S.get(`${R(code)}/rounds/${r}/steps`))||{},qa=(await S.get(`${R(code)}/rounds/${r}/qa`))||{};
+    const played={};let sel=ids.find(id=>workerOf(P.meta[id],0)===pid)||ids[0],timer=null;
+    const itemsOf=id=>{const ch=P.meta[id],st=all[id]||{};const it=[{first:true,text:ch.start,label:'처음 제시어'}];for(let s=0;s<ch.L;s++)it.push({kind:stepType(s),step:st[s],who:nameOf(workerOf(ch,s)),qa:qa[`${id}_${s}`]});return it};
+    const bub=x=>{if(x.first)return `<div class="bub first"><small>${esc(x.label)}</small><div>${esc(x.text||'(빈칸)')}</div></div>`;
+      const q=x.qa&&x.qa.q?`<div class="qa"><div class="q">질문: ${esc(x.qa.q)}</div><div class="a">${x.qa.a?'대답: '+esc(x.qa.a):'(대답 못 받음)'}</div></div>`:'';
+      const b=x.kind==='draw'?(x.step&&x.step.img?`<img class="shot" alt="${esc(x.who)}의 그림" src="${x.step.img}">`:'<div class="shot ph">(시간 안에 못 그렸어요)</div>'):`<div class="say">${esc(x.step&&x.step.text||'(빈칸)')}</div>`;
+      return `<div class="bub ${x.kind}"><span class="who">${esc(x.who)} ${x.kind==='draw'?'그림':'단어'}</span>${q}${b}</div>`};
+    const draw=()=>{if(timer){clearInterval(timer);timer=null}
+      const items=itemsOf(sel);
+      $app.innerHTML=header(`<span class="pill on">${r}라운드 앨범</span><span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+`<div class="card stack">
+        <div class="tabs">${ids.map(id=>`<button data-c="${id}" class="${id===sel?'sel':''}">${esc(nameOf(workerOf(P.meta[id],0)))}의 앨범${played[id]?' ✓':''}</button>`).join('')}</div>
+        <div class="stage" id="stage">${items.map(bub).join('')}</div>
+        <div id="res"></div></div>`;
+      played[sel]=true;{const last=items[items.length-1];const lt=last.kind==='word'?(last.step&&last.step.text||'(빈칸)'):'(그림)';
+        const i2=ids.indexOf(sel);
+        document.getElementById('res').innerHTML=`<div class="result"><div class="vs"><span class="b1">${esc(items[0].text||'')}</span><i>➜</i><span class="b2">${esc(lt)}</span></div>
+          <p class="center muted" style="margin:0">처음과 마지막, 같았나요? 어디서 달라졌을까요?</p>
+          ${i2<ids.length-1?'<div class="row" style="justify-content:center"><button class="main" id="nextc">다음 친구 앨범 ▶</button></div>':''}</div>`;
+        const nc=document.getElementById('nextc');if(nc)nc.onclick=()=>{sel=ids[i2+1];draw();window.scrollTo({top:0,behavior:'smooth'})}}
       document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{sel=b.dataset.c;draw()})};
-    if(sel)draw();
+    if(sel)draw();else $app.innerHTML=header()+`<div class="card center stack">${IMG.wave}<h2>TV 화면을 함께 봐요! 📺</h2></div>`;
   }
 }
 
