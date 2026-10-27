@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>꼬리 물기 그림 릴레이</title>
+<script>
+/* =====================================================================
+   ★ Firebase 설정값을 여기에 붙여 넣으세요 ★
+   (안내서 3단계) 붙여 넣기 전에는 '데모 모드'로 동작합니다.
+   데모 모드: 한 컴퓨터의 같은 브라우저 탭끼리만 연결됩니다.
+   ===================================================================== */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCRTg4JloZ-2M_3V30VVptbYYz5_Q_qgJc",
+  authDomain: "kkori-93p.firebaseapp.com",
+  databaseURL: "https://kkori-93p-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "kkori-93p",
+  storageBucket: "kkori-93p.firebasestorage.app",
+  messagingSenderId: "436390426531",
+  appId: "1:436390426531:web:b645b3f7a773a795f64c16"
+};
+/* 예시)
+const FIREBASE_CONFIG = {
+  apiKey: "AIza....",
+  authDomain: "my-kkori.firebaseapp.com",
+  databaseURL: "https://my-kkori-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "my-kkori",
+  storageBucket: "my-kkori.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+};
+*/
+</script>
+<style>
+@font-face{font-family:"ONE Mobile POP";src:url("assets/fonts/ONE-Mobile-POP.woff") format("woff");font-display:swap}
+@font-face{font-family:"NanumSquareRound";src:url("assets/fonts/NanumSquareRoundR.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"NanumSquareRound";src:url("assets/fonts/NanumSquareRoundB.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{
+  /* AI 문해력 교과서 표지·단원 그림: 하늘과 떠 있는 섬 배경, 크림색 카드, 단원 주황 강조, 모바일POP 제목 */
+  --grass:#8FCB6E; --sky:#CDEBF7;
+  --paper:#FFFBF2; --card:#FFFDF7; --ink:#3D3A4B; --soft:#7C7789; --line:#EADFCB;
+  --wood:#F58A3C; --wood-dark:#D96A1E; --wood-ink:#FFFFFF;
+  --accent:#F58A3C; --accent-dark:#D96A1E; --accent-ink:#FFFFFF;
+  --sun:#FFD45C; --sun-dark:#E3AE2B;
+  --blue:#3E86C9; --green:#3B9A57; --red:#E0574A; --shade:#F3EBDC;
+  --display:"ONE Mobile POP","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"NanumSquareRound","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:max(12px,env(safe-area-inset-top,0px)) 24px}
+#app{max-width:980px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.25}
+h1{font-size:2rem} h2{font-size:1.5rem} h3{font-size:1.2rem}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:6px 14px;border-bottom:2px dashed var(--line);margin-bottom:18px}
+.brand{font-family:var(--display);font-size:1.35rem;display:flex;gap:8px;align-items:center}
+.brand .tail{color:var(--accent)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:var(--shade);font-size:.9rem;color:var(--soft)}
+.pill.on{background:var(--accent);color:var(--accent-ink)}
+.demo{background:#FFF3C4;color:#6B5200;border-radius:10px;padding:8px 12px;font-size:.9rem;margin-bottom:14px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:18px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+label{font-size:.95rem;color:var(--soft);display:flex;flex-direction:column;gap:4px}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
+textarea{min-height:120px;resize:vertical}
+button{font-family:var(--display);font-size:1.1rem;border:0;border-radius:12px;padding:12px 20px;cursor:pointer;background:var(--shade);color:var(--ink)}
+button.main{background:var(--accent);color:var(--accent-ink)}
+button.ghost{background:transparent;border:1.5px solid var(--line)}
+button:disabled{opacity:.45;cursor:default}
+.big{font-size:1.35rem;padding:16px 26px}
+.muted{color:var(--soft)}
+.center{text-align:center}
+.code{font-family:var(--display);font-size:4.2rem;letter-spacing:.12em;color:var(--accent);line-height:1}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.grp{border:1.5px solid var(--line);border-radius:12px;padding:10px;background:var(--paper)}
+.grp b{font-family:var(--display);font-weight:400}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{background:var(--shade);border-radius:8px;padding:2px 8px;font-size:.9rem;font-variant-numeric:tabular-nums}
+.warn{color:var(--red)}
+.timer{font-family:var(--display);font-size:2rem;font-variant-numeric:tabular-nums}
+.timer.low{color:var(--red)}
+.prompt{font-family:var(--display);font-size:1.7rem;text-align:center;padding:10px;background:var(--shade);border-radius:12px}
+.prompt small{display:block;font-family:var(--body);font-size:.95rem;color:var(--soft)}
+.canvasWrap{background:#fff;border:2px solid var(--line);border-radius:14px;overflow:hidden;touch-action:none;width:100%;max-width:720px;margin:0 auto;aspect-ratio:4/3}
+.canvasWrap canvas{width:100%;height:100%;display:block;touch-action:none}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.palette{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;width:100%;max-width:600px;margin:0 auto}
+.palette .sw{width:100%;height:auto;aspect-ratio:1}
+.sw.white{outline:1px solid #bbb;outline-offset:-4px}
+.sw{width:40px;height:40px;border-radius:50%;border:3px solid transparent;padding:0}
+.sw.sel{border-color:var(--ink)}
+.tool{padding:8px 14px;font-size:1rem}
+.tool.sel{background:var(--ink);color:var(--paper)}
+.shot{background:#fff;border:2px solid var(--line);border-radius:14px;width:100%;max-width:720px;display:block;margin:0 auto;aspect-ratio:4/3;object-fit:contain}
+.ph{display:grid;place-items:center;color:#8a8577;font-size:1.1rem}
+.word{font-family:var(--display);font-size:2.2rem;text-align:center;padding:24px 10px}
+.qa{background:var(--shade);border-radius:12px;padding:10px 14px}
+.qa .q{color:var(--blue)} .qa .a{color:var(--green)}
+.modalBg{position:fixed;inset:0;background:rgba(20,18,28,.55);display:grid;place-items:center;padding:16px;z-index:20}
+.modal{background:var(--card);border-radius:18px;padding:18px;max-width:560px;width:100%;max-height:90vh;overflow:auto}
+.progress{height:12px;background:var(--shade);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .3s}
+.album{display:flex;flex-direction:column;gap:12px}
+.album .shot{max-width:520px}
+.step{display:flex;flex-direction:column;gap:6px}
+.who{font-size:.9rem;color:var(--soft)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{padding:8px 14px;font-size:1rem}
+.tabs button.sel{background:var(--ink);color:var(--paper)}
+.match{font-family:var(--display);padding:6px 12px;border-radius:10px}
+.match.yes{background:#DDF3E6;color:#1F6E43} .match.no{background:#FBE1DE;color:#9A2C22}
+.cmp{display:grid;grid-template-columns:auto 1fr auto;gap:10px 12px;align-items:center}
+.cmp .track{height:26px;background:var(--shade);border-radius:8px;overflow:hidden}
+.cmp .fill{height:100%;background:var(--blue)}
+.cmp .fill.r2{background:var(--accent)}
+.num{font-variant-numeric:tabular-nums;font-family:var(--display);font-size:1.2rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- 아늑한 섬 테마 ---------- */
+body{background:#8DBF5A url("assets/img/bg-cover.webp") center center/cover fixed no-repeat}
+.deco{position:fixed;z-index:0;pointer-events:none;height:auto}
+.d-sheep{width:clamp(80px,11vw,170px);left:max(10px,env(safe-area-inset-left,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));animation:bob 3.2s ease-in-out infinite}
+.d-book{width:clamp(70px,9vw,140px);right:max(12px,env(safe-area-inset-right,0px));bottom:max(20px,env(safe-area-inset-bottom,0px));animation:bob 3.6s ease-in-out infinite .8s}
+.d-spark{width:clamp(30px,3vw,50px);right:max(18px,env(safe-area-inset-right,0px));top:max(90px,env(safe-area-inset-top,0px));animation:twinkle 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes twinkle{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.8);opacity:.7}}
+.hero{width:min(300px,70%);height:auto;margin:0 auto;display:block;animation:bob 3s ease-in-out infinite}
+.mascot{width:min(220px,55%);height:auto;margin:0 auto;display:block}
+#app{position:relative;z-index:1}
+.bar{border-bottom:0;padding-block:0;margin-bottom:16px}
+.brand{background:var(--card);color:var(--ink);padding:8px 20px;border-radius:999px;box-shadow:0 4px 0 rgba(60,80,120,.15);font-size:1.4rem}
+.brand .tail{color:var(--accent)}
+.pill{background:var(--card);color:var(--ink);border:2px solid var(--line)}
+.pill.on{background:var(--sun);color:var(--ink);border-color:var(--sun-dark)}
+.demo{background:var(--card);color:var(--soft);border:2px dashed var(--sun-dark);border-radius:16px}
+.card,.modal{background:var(--card);border:0;border-radius:28px;box-shadow:0 5px 0 rgba(120,90,40,.18),0 12px 24px rgba(60,90,40,.12)}
+.grp{background:var(--paper);border:2px solid var(--line);border-radius:18px}
+input,textarea,select{background:#fff;border:2px solid var(--line);border-radius:14px}
+button{border-radius:999px;background:var(--shade);color:var(--ink);box-shadow:0 4px 0 #D8C79F;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #D8C79F}
+button.main{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px 0 var(--accent-dark)}
+button.main:active{box-shadow:0 1px 0 var(--accent-dark)}
+button.ghost{background:var(--card);border:2px solid var(--line)}
+.sw{box-shadow:0 3px 0 rgba(0,0,0,.18);border:3px solid #fff}
+.sw.sel{border-color:var(--ink)}
+.tool.sel,.tabs button.sel{background:var(--wood);color:var(--wood-ink);box-shadow:0 4px 0 var(--wood-dark)}
+.code{color:var(--accent);text-shadow:0 4px 0 rgba(38,137,122,.18)}
+.prompt{background:var(--sun);color:var(--ink);border-radius:22px;box-shadow:0 4px 0 var(--sun-dark)}
+.prompt small{color:var(--wood-dark)}
+.canvasWrap,.shot{border:5px solid #fff;border-radius:22px;box-shadow:0 0 0 3px var(--line),0 8px 18px rgba(60,80,120,.15)}
+.qa{background:var(--paper);border:2px solid var(--line);border-radius:18px}
+.progress{background:var(--shade);height:16px}
+.chip{background:#E3F2FB;color:var(--ink)}
+.modalBg{background:rgba(40,70,110,.45)}
+@media (prefers-reduced-motion:reduce){.deco,.hero{animation:none}}
+
+.brand{gap:10px;padding:6px 18px 6px 8px}
+.brand .badge{height:54px;width:auto}
+.pagetag{font-family:var(--display);background:var(--card);color:var(--ink);padding:8px 18px;border-radius:18px;box-shadow:0 4px 0 rgba(60,80,40,.18);text-align:center;line-height:1.25;font-size:1.05rem}
+.herotitle{font-size:clamp(2.4rem,5vw,3.4rem)}
+.titlewrap{display:flex;flex-direction:column;align-items:center;gap:2px}
+.entitle{font-family:var(--display);font-size:clamp(1.05rem,2vw,1.35rem);color:var(--accent);letter-spacing:.06em}
+.flow{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;font-family:var(--display);font-size:1.25rem}
+.flow span{background:var(--shade);padding:8px 16px;border-radius:999px}
+.flow span.s1{background:var(--sun)} .flow span.s2{background:#CFE8FF} .flow span.s3{background:#D8F2D0}
+.flow i{font-style:normal;color:var(--accent);font-size:1.4rem}
+.homegrid{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+@media (max-width:720px){.homegrid{grid-template-columns:1fr}}
+.homegrid>*{min-width:0}.row>label{min-width:0}.row>label select,.row>label input{width:100%}
+.card.student{border:4px solid var(--accent);box-shadow:0 0 0 6px rgba(245,138,60,.22),0 10px 24px rgba(60,80,40,.18);position:relative}
+.card.student .ribbon{position:absolute;top:-16px;left:18px;background:var(--accent);color:#fff;font-family:var(--display);padding:4px 16px;border-radius:999px;box-shadow:0 3px 0 var(--accent-dark)}
+.card.student h2{font-size:1.8rem;color:var(--accent-dark)}
+.card.student input,.card.student select{font-size:1.15rem;padding:12px 14px}
+.card.teacher{background:var(--card)}
+.card.teacher h2{font-size:1.2rem;color:var(--soft)}
+.heroA{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);align-items:center;gap:22px;padding:18px 26px}
+.heroA .pic{width:100%;max-width:300px;justify-self:center;animation:bob 3s ease-in-out infinite}
+.heroA .txt{display:flex;flex-direction:column;gap:14px;min-width:0}
+.trow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.enbadge{font-family:var(--display);background:var(--accent);color:#fff;padding:6px 14px;border-radius:999px;font-size:1.05rem;box-shadow:0 3px 0 var(--accent-dark)}
+.flow.left{justify-content:flex-start}
+@media (max-width:640px){.heroA{grid-template-columns:1fr}.heroA .txt{align-items:center;text-align:center}.flow.left{justify-content:center}}
+.heroA .flow{flex-wrap:nowrap;gap:clamp(4px,.8vw,8px);font-size:clamp(.95rem,2vw,1.25rem)}
+@media (max-width:1000px){.heroA{grid-template-columns:minmax(0,1fr) minmax(0,3fr)}}
+@media (max-width:640px){.heroA .flow{font-size:.8rem}}
+.heroA .flow span{white-space:nowrap;padding:clamp(5px,.8vw,8px) clamp(9px,1.4vw,16px)}
+.heroA .flow i{font-size:1em}
+.linkrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.linkrow .lk{font-family:var(--display);color:var(--ink)}
+.linkrow .url{color:var(--soft);word-break:break-all;min-width:0;font-size:.95rem;background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:6px 10px}
+.copybtn{padding:6px 14px;font-size:.95rem}
+.hint{color:var(--accent-dark);font-size:.85rem}
+textarea#w1,textarea#w2{min-height:150px;line-height:1.6}
+.notice{background:#FFF4D6;border:2px dashed var(--sun-dark);border-radius:16px;padding:12px 16px;color:var(--ink)}
+.tvhint{background:var(--card);color:var(--soft);font-size:.88rem;padding:6px 12px;border-radius:999px}
+
+.stage{display:flex;flex-direction:column;gap:14px;min-height:260px;padding:6px 2px}
+.stagehint{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--soft);margin:auto}
+.stagehint .mascot{width:min(170px,40%)}
+.bub{display:flex;flex-direction:column;gap:6px;align-items:center}
+.bub.first{align-self:center;background:var(--sun);border-radius:22px;padding:12px 28px;box-shadow:0 4px 0 var(--sun-dark);font-family:var(--display);font-size:clamp(1.6rem,3.4vw,2.4rem);text-align:center}
+.bub.first small{display:block;font-family:var(--body);font-size:.9rem;color:var(--wood-dark)}
+.bub .who{font-size:.95rem;color:var(--soft);font-family:var(--display)}
+.bub .say{position:relative;background:#fff;border:3px solid var(--line);border-radius:22px;padding:14px 28px;font-family:var(--display);font-size:clamp(1.6rem,3.4vw,2.4rem)}
+.bub .say::after{content:"";position:absolute;left:50%;top:-14px;margin-left:-10px;border:10px solid transparent;border-bottom-color:var(--line)}
+.bub .shot{max-width:520px}
+.pop{animation:popin .55s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popin{from{opacity:0;transform:translateY(24px) scale(.85)}to{opacity:1;transform:none}}
+.ctl{justify-content:center}
+.result{display:flex;flex-direction:column;gap:12px;margin-top:6px;padding-top:14px;border-top:2px dashed var(--line)}
+.vs{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--display);font-size:clamp(1.3rem,2.8vw,2rem)}
+.vs span{padding:8px 18px;border-radius:999px}.vs .b1{background:var(--sun)}.vs .b2{background:#D8F2D0}.vs i{font-style:normal;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}}
+</style>
+</head>
+<body>
+<img class="deco d-spark" src="assets/img/sparkle.webp" alt="" aria-hidden="true">
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+"use strict";
+/* ====================== 저장소: Firebase 또는 데모 ====================== */
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+const split=p=>p.split('/').filter(Boolean);
+function getAt(o,p){for(const k of split(p)){if(o==null)return null;o=o[k]}return o===undefined?null:o}
+function setAt(o,p,v){const ks=split(p);let c=o;for(let i=0;i<ks.length-1;i++){if(typeof c[ks[i]]!=='object'||c[ks[i]]===null)c[ks[i]]={};c=c[ks[i]]}
+  if(v===null||v===undefined)delete c[ks[ks.length-1]];else c[ks[ks.length-1]]=JSON.parse(JSON.stringify(v))}
+
+function demoStore(){
+  const KEY='kkori-demo-db';const subs=[];
+  const load=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
+  const save=s=>{try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}};
+  function notify(){const s=load();for(const sub of subs){const v=getAt(s,sub.path);const str=JSON.stringify(v);if(str!==sub.last){sub.last=str;sub.cb(v==null?null:JSON.parse(str))}}}
+  window.addEventListener('storage',e=>{if(e.key===KEY)notify()});
+  return{demo:true,offset:0,
+    async get(p){return getAt(load(),p)},
+    async set(p,v){const s=load();setAt(s,p,v);save(s);setTimeout(notify,0)},
+    async update(p,o){const s=load();for(const k in o)setAt(s,p+'/'+k,o[k]);save(s);setTimeout(notify,0)},
+    async remove(p){const s=load();setAt(s,p,null);save(s);setTimeout(notify,0)},
+    on(p,cb){const sub={path:p,cb,last:undefined};subs.push(sub);setTimeout(notify,0);return()=>{const i=subs.indexOf(sub);if(i>=0)subs.splice(i,1)}}
+  };
+}
+async function firebaseStore(cfg){
+  const V='10.12.2';
+  await loadScript(`https://www.gstatic.com/firebasejs/${V}/firebase-app-compat.js`);
+  await loadScript(`https://www.gstatic.com/firebasejs/${V}/firebase-database-compat.js`);
+  firebase.initializeApp(cfg);const db=firebase.database();
+  const st={demo:false,offset:0,
+    async get(p){return (await db.ref(p).get()).val()},
+    set:(p,v)=>db.ref(p).set(v),update:(p,o)=>db.ref(p).update(o),remove:p=>db.ref(p).remove(),
+    on(p,cb){const r=db.ref(p);const h=r.on('value',s=>cb(s.val()));return()=>r.off('value',h)}};
+  db.ref('.info/serverTimeOffset').on('value',s=>{st.offset=s.val()||0});
+  return st;
+}
+let S; const now=()=>Date.now()+(S?S.offset:0);
+
+/* ============================ 공통 도우미 ============================ */
+const $app=document.getElementById('app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function h(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild}
+const norm=s=>String(s||'').replace(/[\s.,!?~'"()\-]/g,'').toLowerCase();
+function isMatch(a,b){a=norm(a);b=norm(b);if(!a||!b)return false;return a===b||(a.length>=2&&b.length>=2&&(a.includes(b)||b.includes(a)))}
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const RS=()=>(S&&S.demo)?ss:ls; // 실제 수업: 태블릿이 꺼져도 기억, 데모: 탭마다 따로
+const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
+const R=code=>`rooms/${code}`;
+const DEF_WORDS={
+ 1:['코딱지 파는 토끼','모자 쓴 수박','스케이트보드 탄 노란 의자','이불 덮고 자는 해님','줄넘기하는 오징어'],
+ 2:['안경 쓴 물고기','날개 달린 분홍 의자','노래하는 당근','우산 쓴 눈사람','물구나무 선 곰']};
+const PAGE_TAG='<span class="pagetag">AI문해력5<br>93쪽</span>';
+function header(right=''){return `<div class="bar"><div class="brand"><img src="assets/img/think-plus.webp" alt="생각 더하기" class="badge"><span>꼬리 물기로 같은 생각하기</span></div><div class="row">${right}</div></div>${S&&S.demo?'<div class="demo">데모 모드예요. 이 컴퓨터의 같은 브라우저 탭끼리만 연결돼요. 수업에서 쓰려면 안내서대로 Firebase 설정값을 넣어 주세요.</div>':''}`}
+const IMG={picnic:'<img class="hero" src="assets/img/picnic.webp" alt="">',wave:'<img class="mascot" src="assets/img/robot-wave.webp" alt="">',rocket:'<img class="mascot" style="width:min(150px,40%)" src="assets/img/robot-rocket.webp" alt="">'};
+const nameOf=pid=>String(pid||'').replace(/^g\d+_/,'');
+const stepType=s=>s%2===0?'draw':'word';
+// 체인 c, 단계 s 의 작성자 = members[(c+s)%n]
+const workerOf=(ch,s)=>ch.members[(ch.c+s)%ch.n];
+
+/* ============================== 그림판 ============================== */
+function makeCanvas(wrap){
+  const W=800,H=600;const cv=document.createElement('canvas');cv.width=W;cv.height=H;wrap.appendChild(cv);
+  const ctx=cv.getContext('2d');ctx.lineCap='round';ctx.lineJoin='round';
+  const strokes=[];let cur=null;let color='#2B2A33',size=8,eraser=false;
+  function paint(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);for(const st of strokes)drawStroke(st)}
+  function drawStroke(st){ctx.strokeStyle=st.c;ctx.lineWidth=st.w;ctx.beginPath();const p=st.p;ctx.moveTo(p[0][0],p[0][1]);if(p.length===1)ctx.lineTo(p[0][0]+.1,p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.stroke()}
+  function pos(e){const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]}
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();cv.setPointerCapture(e.pointerId);cur={c:eraser?'#fff':color,w:eraser?size*3:size,p:[pos(e)]};strokes.push(cur);drawStroke(cur)});
+  cv.addEventListener('pointermove',e=>{if(!cur)return;e.preventDefault();cur.p.push(pos(e));const p=cur.p;ctx.strokeStyle=cur.c;ctx.lineWidth=cur.w;ctx.beginPath();ctx.moveTo(p[p.length-2][0],p[p.length-2][1]);ctx.lineTo(p[p.length-1][0],p[p.length-1][1]);ctx.stroke()});
+  const end=()=>{cur=null};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);cv.addEventListener('pointerleave',end);
+  paint();
+  return{
+    setColor(c){color=c;eraser=false},setSize(s){size=s},setEraser(){eraser=true},
+    undo(){strokes.pop();paint()},clear(){strokes.length=0;paint()},
+    isEmpty:()=>strokes.length===0,
+    data(){const o=document.createElement('canvas');o.width=480;o.height=360;const c=o.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,480,360);c.drawImage(cv,0,0,480,360);return o.toDataURL('image/jpeg',.6)}
+  };
+}
+function drawUI(container){
+  const wrap=h('<div class="canvasWrap"></div>');
+  const pad=makeCanvas(wrap);
+  const colors=[['검정','#222222'],['회색','#8E8E8E'],['흰색','#FFFFFF'],['빨강','#E53935'],['다홍','#FF6F4F'],['주황','#FB8C00'],['노랑','#FDD835'],['연노랑','#FFF59D'],['연두','#9CCC65'],['초록','#2E9E4F'],['진초록','#1B5E20'],['청록','#00897B'],
+    ['하늘','#5EC8F2'],['파랑','#1E63D6'],['남색','#26327A'],['연보라','#B39DDB'],['보라','#7B1FA2'],['자주','#B0186A'],['분홍','#F48FB1'],['살구','#FFD3B0'],['진한 살구','#E9A979'],['황토','#C99A3B'],['갈색','#8D5524'],['고동','#4E2E14']];
+  const pal=h('<div class="palette"></div>'),tools=h('<div class="tools"></div>');
+  colors.forEach(([n,c],i)=>{const b=h(`<button class="sw${i===0?' sel':''}${c==='#FFFFFF'?' white':''}" aria-label="${n}" title="${n}" style="background:${c}"></button>`);b.onclick=()=>{pad.setColor(c);pal.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));tools.querySelectorAll('.tool.er').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};pal.appendChild(b)});
+  [['가늘게',4],['보통',8],['굵게',16]].forEach(([t,s])=>{const b=h(`<button class="tool sz${s===8?' sel':''}">${t}</button>`);b.onclick=()=>{pad.setSize(s);tools.querySelectorAll('.sz').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};tools.appendChild(b)});
+  const er=h('<button class="tool er">지우개</button>');er.onclick=()=>{pad.setEraser();pal.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));er.classList.add('sel')};tools.appendChild(er);
+  const un=h('<button class="tool">되돌리기</button>');un.onclick=()=>pad.undo();tools.appendChild(un);
+  const cl=h('<button class="tool">전부 지우기</button>');cl.onclick=()=>pad.clear();tools.appendChild(cl);
+  container.appendChild(wrap);container.appendChild(pal);container.appendChild(tools);
+  return pad;
+}
+function shotHTML(step){
+  if(!step)return '<div class="shot ph">(시간 안에 못 했어요)</div>';
+  if(step.type==='draw')return step.img?`<img class="shot" alt="친구의 그림" src="${step.img}">`:'<div class="shot ph">(빈 그림)</div>';
+  return `<div class="word">${esc(step.text||'(빈칸)')}</div>`;
+}
+
+/* ============================== 시작 화면 ============================== */
+function home(){
+  $app.innerHTML=header(PAGE_TAG)+`
+  <div class="stack">
+    <div class="card heroA">
+      <img class="pic" src="assets/img/picnic.webp" alt="">
+      <div class="txt">
+        <div class="trow"><h1 class="herotitle">꼬리 물기 놀이</h1><span class="enbadge">Draw &amp; Pass</span></div>
+        <div class="flow left"><span class="s1">제시어</span><i>➜</i><span class="s2">그림 그리기</span><i>➜</i><span class="s3">떠오르는 단어 쓰기</span></div>
+        <p class="muted" style="margin:0">제시어가 친구들을 거치며 얼마나 정확하게 전달되는지 확인해 봅시다.</p>
+      </div>
+    </div>
+    <div class="homegrid">
+      <div class="card stack student">
+        <h2>학생으로 들어가기</h2>
+        <label>방 번호<input id="jc" inputmode="numeric" maxlength="4" placeholder="예: 4821"></label>
+        <div class="row"><label style="flex:1">모둠<select id="jg">${[1,2,3,4,5,6,7].map(g=>`<option value="${g}">${g}모둠</option>`).join('')}</select></label>
+        <label style="flex:2">내 이름<input id="jn" maxlength="10" placeholder="예: 김하늘"></label></div>
+        <p class="muted" style="margin:0;font-size:.95rem">내 이름을 정확하게 쓰세요.</p>
+        <button class="main big" id="jbtn">들어가기</button>
+        <p class="warn" id="jerr" role="alert"></p>
+      </div>
+      <div class="card stack teacher">
+        <h2>선생님</h2>
+        <p class="muted" style="margin:0">방을 만들고 제시어와 시간을 정해요. 큰 화면에 띄워 두세요.</p>
+        <button id="tbtn">새 방 만들기</button>
+        <label>만들었던 방 다시 열기<input id="tc" inputmode="numeric" maxlength="4" placeholder="방 번호" value="${esc(ls.get('kkori-teacher')||'')}"></label>
+        <button class="ghost" id="tre">다시 열기</button>
+      </div>
+    </div>
+  </div>`;
+  const q=new URLSearchParams(location.search).get('room');if(q)document.getElementById('jc').value=q;
+  document.getElementById('jbtn').onclick=join;
+  document.getElementById('tbtn').onclick=createRoom;
+  document.getElementById('tre').onclick=async()=>{const c=document.getElementById('tc').value.trim();if(await S.get(R(c)+'/state'))teacher(c);};
+}
+async function join(){
+  const code=document.getElementById('jc').value.trim(),g=+document.getElementById('jg').value,n=document.getElementById('jn').value.replace(/[.#$\[\]\/\s]/g,'').trim();
+  const err=document.getElementById('jerr');
+  if(!/^\d{4}$/.test(code)){err.textContent='방 번호 4자리를 써 주세요.';return}
+  if(!n){err.textContent='내 이름을 써 주세요.';return}
+  const st=await S.get(R(code)+'/state');if(!st){err.textContent='그 번호의 방이 없어요. 선생님 화면을 다시 확인해 주세요.';return}
+  const pid=`g${g}_${n}`;
+  await S.set(`${R(code)}/players/${pid}`,{group:g,name:n,at:now()});
+  RS().set('kkori-student',JSON.stringify({code,pid}));
+  student(code,pid);
+}
+
+/* ============================== 선생님 ============================== */
+async function createRoom(){
+  let code;for(let i=0;i<20;i++){code=String(1000+Math.floor(Math.random()*9000));if(!(await S.get(R(code)+'/state')))break}
+  await S.set(R(code),{state:{phase:'lobby',round:0,step:0},settings:{steps:4,drawSec:60,wordSec:30,qSec:20,words:DEF_WORDS},createdAt:now()});
+  ls.set('kkori-teacher',code);teacher(code);
+}
+function teacher(code){
+  const T={code,state:null,settings:null,players:{},meta:{},done:{},view:null,album:{g:null,chain:null,reveal:0},steps:{},match:{}};
+  let tick=null;
+  S.on(R(code)+'/state',v=>{T.state=v;render()});
+  S.on(R(code)+'/settings',v=>{T.settings=v;if(!T.state||T.state.phase==='lobby')render()});
+  S.on(R(code)+'/players',v=>{T.players=v||{};if(T.state&&T.state.phase==='lobby')renderLobbyPlayers()});
+  let unMeta=null,unDone=null,unMatch=null,unQa=null,boundRound=null;
+  function bindRound(r){if(boundRound===r)return;boundRound=r;[unMeta,unDone,unMatch,unQa].forEach(f=>f&&f());
+    unMeta=S.on(`${R(code)}/rounds/${r}/meta`,v=>{T.meta[r]=v||{};});
+    unDone=S.on(`${R(code)}/rounds/${r}/done`,v=>{T.done[r]=v||{};updatePlay()});
+    unMatch=S.on(`${R(code)}/rounds/${r}/match`,v=>{T.match[r]=v||{};if(T.state&&T.state.phase==='album'&&T.album&&T.album.refreshMarks)T.album.refreshMarks()});
+    unQa=S.on(`${R(code)}/rounds/${r}/qa`,v=>{T.qa=T.qa||{};T.qa[r]=v||{}});}
+  function render(){
+    const st=T.state;if(!st)return;
+    if(st.round)bindRound(st.round);
+    const key=`${st.phase}-${st.round}-${st.step}`;
+    if(st.phase==='play'||st.phase==='collect'){if(T.view!==key.replace('collect','play')){T.view=key.replace('collect','play');renderPlay()}else updatePlay();startTick();return}
+    stopTick();
+    if(T.view===key)return;T.view=key;
+    if(st.phase==='lobby')renderLobby();else if(st.phase==='album')renderAlbum();
+  }
+  const joinUrl=()=>{const u=new URL(location.href);u.search='';u.hash='';return u.toString()};
+  function renderLobby(){
+    const s=T.settings||{};
+    if(!s.ready||T.showSetup)return renderSetup();
+    $app.innerHTML=header(`<span class="pill">선생님 화면</span>`)+`
+    <div class="stack">
+      <div class="card row" style="justify-content:space-between">
+        <div class="stack" style="gap:6px;min-width:0"><span class="muted">방 번호</span><div class="code">${code}</div>
+        <div class="linkrow"><span class="lk">링크 주소:</span><span class="url" id="jurl">${esc(joinUrl()+'?room='+code)}</span><button class="copybtn" id="cpy" type="button">복사</button></div></div>
+        <div id="qr" aria-label="접속 QR"></div>
+      </div>
+      <div class="card stack"><div class="row" style="justify-content:space-between"><h2>들어온 친구들</h2><span class="pill" id="pc"></span></div><div class="groups" id="gl"></div><p class="warn" id="gw" style="margin:0"></p></div>
+      <div class="row" style="justify-content:space-between">
+        <span class="row"><button class="ghost" id="setb">설정 바꾸기</button><span class="tvhint">제시어가 보이니 TV 화면을 끄고 누르세요</span></span>
+        <span class="row"><button class="ghost" id="del">방 지우기</button><button class="main big" id="go">1라운드 시작 (질문 금지)</button></span>
+      </div>
+    </div>`;
+    document.getElementById('cpy').onclick=async()=>{const b=document.getElementById('cpy'),t=document.getElementById('jurl').textContent;
+      try{await navigator.clipboard.writeText(t);b.textContent='복사됨 ✓'}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('jurl'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);try{document.execCommand('copy');b.textContent='복사됨 ✓'}catch(_){b.textContent='Ctrl+C로 복사'}}
+      setTimeout(()=>{b.textContent='복사'},2000)};
+    try{if(window.QRCode)new QRCode(document.getElementById('qr'),{text:joinUrl()+'?room='+code,width:150,height:150})}catch(e){}
+    renderLobbyPlayers();
+    document.getElementById('go').onclick=()=>startRound(1);
+    document.getElementById('setb').onclick=()=>{T.showSetup=true;renderLobby()};
+    document.getElementById('del').onclick=()=>delRoom();
+  }
+  function renderSetup(){
+    const s=T.settings||{};
+    $app.innerHTML=header(`<span class="pill on">1단계 · 게임 설정</span>`)+`
+    <div class="stack">
+      <div class="notice">아직 TV에 띄우지 마세요. 설정을 마치고 <b>[설정 완료, 방 열기]</b>를 누르면 아이들에게 보여 줄 화면(방 번호·QR)이 나와요.</div>
+      <div class="card stack"><h2>게임 설정</h2>
+        <div class="row">
+          <label>단계 수 (그림·단어 합)<select id="s_steps">${[2,3,4,5,6].map(x=>`<option ${x===(s.steps||4)?'selected':''}>${x}</option>`).join('')}</select></label>
+          <label>그리기 시간(초)<input id="s_draw" type="number" min="20" max="180" value="${s.drawSec||40}" style="width:110px"></label>
+          <label>단어 쓰기 시간(초)<input id="s_word" type="number" min="10" max="120" value="${s.wordSec||20}" style="width:110px"></label>
+          <label>2라운드 질문 시간 추가(초)<input id="s_q" type="number" min="0" max="90" value="${s.qSec??20}" style="width:110px"></label>
+        </div>
+        <div class="grid2">
+          <label>1라운드 제시어 <small class="hint">(클릭해서 수정하세요 · 한 줄에 하나)</small><textarea id="w1">${esc((s.words&&s.words[1]||DEF_WORDS[1]).join('\n'))}</textarea></label>
+          <label>2라운드 제시어 <small class="hint">(클릭해서 수정하세요 · 한 줄에 하나)</small><textarea id="w2">${esc((s.words&&s.words[2]||DEF_WORDS[2]).join('\n'))}</textarea></label>
+        </div>
+        <p class="muted" style="margin:0;font-size:.92rem">모둠 안에서 모두 동시에 시작해요. 각자 다른 제시어를 받아서 그림 → 옆 친구가 단어 → 다음 친구가 그림 순서로 넘어가요. 단계 수가 모둠 인원보다 많으면 모둠 인원만큼만 진행해요.</p>
+      </div>
+      <div class="row" style="justify-content:flex-end"><button class="ghost" id="del">방 지우기</button><button class="main big" id="done">설정 완료, 방 열기</button></div>
+    </div>`;
+    document.getElementById('done').onclick=async()=>{await saveSettings();T.showSetup=false;renderLobby()};
+    document.getElementById('del').onclick=()=>delRoom();
+  }
+  async function saveSettings(){
+    const words=r=>document.getElementById('w'+r).value.split('\n').map(x=>x.trim()).filter(Boolean);
+    const st={steps:+document.getElementById('s_steps').value,drawSec:+document.getElementById('s_draw').value||60,wordSec:+document.getElementById('s_word').value||30,ready:true,qSec:+document.getElementById('s_q').value||0,words:{1:words(1).length?words(1):DEF_WORDS[1],2:words(2).length?words(2):DEF_WORDS[2]}};
+    T.settings=st;await S.set(R(code)+'/settings',st);
+  }
+  function groupsOf(){const g={};for(const[pid,p]of Object.entries(T.players||{})){(g[p.group]=g[p.group]||[]).push({pid,...p})}for(const k in g)g[k].sort((a,b)=>String(a.name).localeCompare(String(b.name),'ko'));return g}
+  function renderLobbyPlayers(){
+    const gl=document.getElementById('gl');if(!gl)return;const g=groupsOf();const keys=Object.keys(g).sort((a,b)=>a-b);
+    gl.innerHTML=keys.length?keys.map(k=>`<div class="grp"><b>${k}모둠</b> <span class="muted">${g[k].length}명</span><div class="chips">${g[k].map(p=>`<span class="chip">${esc(p.name)}</span>`).join('')}</div></div>`).join(''):'<p class="muted">아직 아무도 없어요. 방 번호를 알려 주세요.</p>';
+    document.getElementById('pc').textContent=`${Object.keys(T.players||{}).length}명`;
+    const small=keys.filter(k=>g[k].length<2);document.getElementById('gw').textContent=small.length?`${small.join(', ')}모둠은 1명이라 게임을 할 수 없어요. 다른 모둠으로 옮겨 주세요.`:'';
+  }
+  async function startRound(r){
+    const st=T.settings,g=groupsOf(),words=st.words[r]||DEF_WORDS[r];
+    const meta={};let wi=Math.floor(Math.random()*words.length),maxL=0;
+    for(const k of Object.keys(g).sort((a,b)=>a-b)){const mem=g[k].map(p=>p.pid),n=mem.length;if(n<2)continue;const L=Math.min(st.steps,n);maxL=Math.max(maxL,L);
+      for(let c=0;c<n;c++){meta[`g${k}c${c}`]={group:+k,c,n,L,members:mem,start:words[wi%words.length]};wi++}}
+    if(!maxL){alert('2명 이상인 모둠이 없어요.');return}
+    await S.set(`${R(code)}/rounds/${r}`,{meta,q:r===2});
+    T.meta[r]=meta;
+    await S.set(R(code)+'/state',{phase:'play',round:r,step:0,maxL,q:r===2,deadline:now()+stepSec(0,r)*1000});
+  }
+  function stepSec(s,r){const st=T.settings||{};return (stepType(s)==='draw'?st.drawSec:st.wordSec)+(r===2&&s>0?(st.qSec||0):0)}
+  function counts(){const st=T.state,meta=T.meta[st.round]||{},done=T.done[st.round]||{};let tot=0,ok=0;for(const[id,ch]of Object.entries(meta)){if(st.step<ch.L){tot++;if(done[`${id}_${st.step}`])ok++}}return{tot,ok}}
+  function renderPlay(){
+    const st=T.state;
+    $app.innerHTML=header(`<span class="pill on">${st.round}라운드${st.q?' · 질문 1번':' · 질문 금지'}</span><span class="pill">방 ${code}</span>`)+`
+    <div class="stack">
+      <div class="card stack center">${IMG.rocket}
+        <span class="muted" id="pstep"></span>
+        <h1 id="ptitle"></h1>
+        <div class="timer" id="ptimer">-</div>
+        <div class="progress" aria-label="제출한 친구 비율"><i id="pbar" style="width:0%"></i></div>
+        <div class="num" id="pcount"></div>
+      </div>
+      <div class="row" style="justify-content:center"><button id="plus">시간 +15초</button><button class="main" id="next">바로 다음 단계로</button></div>
+      <div class="card"><h3>모둠별 진행</h3><div class="groups" id="pg" style="margin-top:8px"></div></div>
+    </div>`;
+    document.getElementById('plus').onclick=()=>S.update(R(code)+'/state',{deadline:(T.state.deadline||now())+15000});
+    document.getElementById('next').onclick=()=>advance(true);
+    updatePlay();
+  }
+  function updatePlay(){
+    const st=T.state;if(!st||!(st.phase==='play'||st.phase==='collect'))return;const el=document.getElementById('ptitle');if(!el)return;
+    document.getElementById('pstep').textContent=`${st.step+1}단계 / 전체 ${st.maxL}단계`;
+    el.textContent=st.phase==='collect'?'모으는 중…':(stepType(st.step)==='draw'?(st.step===0?'제시어를 그림으로 그려요':'친구가 쓴 단어를 그림으로 그려요'):'친구 그림을 보고 단어를 써요');
+    const{tot,ok}=counts();document.getElementById('pcount').textContent=`${ok} / ${tot} 제출`;document.getElementById('pbar').style.width=(tot?ok/tot*100:0)+'%';
+    const meta=T.meta[st.round]||{},done=T.done[st.round]||{},by={};
+    for(const[id,ch]of Object.entries(meta)){if(st.step>=ch.L)continue;const g=ch.group;by[g]=by[g]||{t:0,o:0};by[g].t++;if(done[`${id}_${st.step}`])by[g].o++}
+    document.getElementById('pg').innerHTML=Object.keys(by).sort((a,b)=>a-b).map(g=>`<div class="grp"><b>${g}모둠</b> <span class="num">${by[g].o}/${by[g].t}</span></div>`).join('');
+  }
+  function startTick(){if(tick)return;tick=setInterval(loop,400)}
+  function stopTick(){clearInterval(tick);tick=null}
+  let busy=false;
+  async function loop(){
+    const st=T.state;if(!st||busy)return;
+    const t=document.getElementById('ptimer');
+    if(st.phase==='play'){const left=Math.max(0,Math.ceil((st.deadline-now())/1000));if(t){t.textContent=`${left}초`;t.classList.toggle('low',left<=10)}
+      const{tot,ok}=counts();if((tot&&ok>=tot)||now()>=st.deadline)await advance(false)}
+    else if(st.phase==='collect'){if(t)t.textContent='…';if(now()>=st.collectUntil){busy=true;try{await nextStep()}finally{busy=false}}}
+  }
+  async function advance(){busy=true;try{if(T.state.phase==='play')await S.update(R(code)+'/state',{phase:'collect',collectUntil:now()+2500})}finally{busy=false}}
+  async function nextStep(){
+    const st=T.state;const s=st.step+1;
+    if(s>=st.maxL){await S.update(R(code)+'/state',{phase:'album'});return}
+    await S.update(R(code)+'/state',{phase:'play',step:s,deadline:now()+stepSec(s,st.round)*1000});
+  }
+  /* ---- 앨범 ---- */
+  async function loadSteps(r){T.steps[r]=(await S.get(`${R(code)}/rounds/${r}/steps`))||{};if(!T.meta[r]||!Object.keys(T.meta[r]).length)T.meta[r]=(await S.get(`${R(code)}/rounds/${r}/meta`))||{};T.qa=T.qa||{};T.qa[r]=(await S.get(`${R(code)}/rounds/${r}/qa`))||{};}
+  function autoMatch(r,id){const ch=T.meta[r][id],steps=T.steps[r][id]||{};const last=steps[ch.L-1];if(T.match[r]&&T.match[r][id]!=null)return T.match[r][id];if(!last||last.type!=='word')return null;return isMatch(last.text,ch.start)}
+  async function renderAlbum(){
+    const r=T.state.round;T.album={g:null,chain:null,reveal:0};await loadSteps(r);
+    const groups=[...new Set(Object.values(T.meta[r]).map(c=>c.group))].sort((a,b)=>a-b);
+    if(T.album.g==null||!groups.includes(T.album.g))T.album.g=groups[0];
+    $app.innerHTML=header(`<span class="pill on">${r}라운드 앨범</span><span class="pill">방 ${code}</span>`)+`
+    <div class="stack">
+      <div class="card stack"><div class="row" style="justify-content:space-between"><h2>처음과 마지막, 같았을까?</h2>
+        <div class="row">${r===1?'<button class="main" id="r2">2라운드 시작 (질문 1번 허용)</button>':''}<button class="ghost" id="cmpb">1·2라운드 비교</button></div></div>
+        <div class="tabs" id="gt">${groups.map(g=>`<button data-g="${g}" class="${g===T.album.g?'sel':''}">${g}모둠</button>`).join('')}</div>
+      </div>
+      <div id="ab"></div>
+      <div class="row" style="justify-content:flex-end"><button class="ghost" id="del">방 지우기</button></div>
+    </div>`;
+    document.querySelectorAll('#gt button').forEach(b=>b.onclick=()=>{T.album.g=+b.dataset.g;T.album.chain=null;T.album.reveal=0;document.querySelectorAll('#gt button').forEach(x=>x.classList.toggle('sel',x===b));renderAlbumBody()});
+    const r2=document.getElementById('r2');if(r2)r2.onclick=()=>startRound(2);
+    document.getElementById('cmpb').onclick=showCompare;
+    document.getElementById('del').onclick=()=>delRoom();
+    renderAlbumBody();
+  }
+  function albumItems(r,id){const ch=T.meta[r][id],steps=(T.steps[r]||{})[id]||{},qa=(T.qa&&T.qa[r])||{};
+    const it=[{first:true,text:ch.start,label:'처음 제시어'}];
+    for(let s=0;s<ch.L;s++)it.push({kind:stepType(s),step:steps[s],who:nameOf(workerOf(ch,s)),qa:qa[`${id}_${s}`]});return it}
+  const ownerOf=ch=>nameOf(workerOf(ch,0));
+  function bubbleHTML(x){
+    if(x.first)return `<div class="bub first"><small>${esc(x.label)}</small><div>${esc(x.text||'(빈칸)')}</div></div>`;
+    const qa=x.qa&&x.qa.q?`<div class="qa"><div class="q">질문: ${esc(x.qa.q)}</div><div class="a">${x.qa.a?'대답: '+esc(x.qa.a):'(대답 못 받음)'}</div></div>`:'';
+    const body=x.kind==='draw'?(x.step&&x.step.img?`<img class="shot" alt="${esc(x.who)}의 그림" src="${x.step.img}">`:'<div class="shot ph">(시간 안에 못 그렸어요)</div>')
+      :`<div class="say">${esc(x.step&&x.step.text||'(빈칸)')}</div>`;
+    return `<div class="bub ${x.kind}"><span class="who">${esc(x.who)} ${x.kind==='draw'?'그림':'단어'}</span>${qa}${body}</div>`;
+  }
+  function renderAlbumBody(){
+    const box=document.getElementById('ab');if(!box)return;const r=T.state.round;const meta=T.meta[r]||{};
+    if(T.album.timer){clearInterval(T.album.timer);T.album.timer=null}
+    T.album.played=T.album.played||{};
+    const ids=Object.keys(meta).filter(id=>meta[id].group===T.album.g).sort((a,b)=>meta[a].c-meta[b].c);
+    if(T.album.chain==null||!ids.includes(T.album.chain)){T.album.chain=ids[0];T.album.reveal=0}
+    const id=T.album.chain,ch=meta[id],items=albumItems(r,id);
+    box.innerHTML=`<div class="card stack">
+      <div class="tabs" id="ct">${ids.map(x=>`<button data-c="${x}" class="${x===id?'sel':''}">${esc(ownerOf(meta[x]))}의 앨범${T.album.played[x]?' ✓':''}</button>`).join('')}</div>
+      <div class="stage" id="stage"></div>
+      <div id="res"></div></div>`;
+    const stage=document.getElementById('stage');
+    stage.innerHTML=items.map(bubbleHTML).join('');T.album.played[id]=true;
+    function finish(){
+      const m=autoMatch(r,id);const last=items[items.length-1];
+      const lastTxt=last.kind==='word'?(last.step&&last.step.text||'(빈칸)'):'(그림)';
+      document.getElementById('res').innerHTML=`<div class="result pop">
+        <div class="vs"><span class="b1">${esc(items[0].text||'')}</span><i>➜</i><span class="b2">${esc(lastTxt)}</span></div>
+        <div class="row" style="justify-content:center"><span>처음과 마지막이</span><button class="match yes" id="my">일치 <span id="mky">${m===true?'✓':''}</span></button><button class="match no" id="mn">불일치 <span id="mkn">${m===false?'✓':''}</span></button></div>
+        <p class="center muted" style="margin:0">어떤 정보가 빠졌거나 달라졌나요? 더 정확하게 전하려면 무엇을 덧붙이면 좋을까요?</p>
+        <div class="row" style="justify-content:center"><button class="main" id="nextc">다음 친구 앨범 ▶</button></div></div>`;
+      document.getElementById('my').onclick=()=>S.set(`${R(code)}/rounds/${r}/match/${id}`,true);
+      document.getElementById('mn').onclick=()=>S.set(`${R(code)}/rounds/${r}/match/${id}`,false);
+      document.getElementById('nextc').onclick=()=>{const i=ids.indexOf(id);
+        if(i<ids.length-1){T.album.chain=ids[i+1];T.album.reveal=0;renderAlbumBody();toTop()}
+        else{const gs=[...document.querySelectorAll('#gt button')].map(b=>+b.dataset.g);const gi=gs.indexOf(T.album.g);
+          if(gi<gs.length-1){T.album.g=gs[gi+1];T.album.chain=null;document.querySelectorAll('#gt button').forEach(x=>x.classList.toggle('sel',+x.dataset.g===T.album.g));renderAlbumBody();toTop()}
+          else document.getElementById('nextc').textContent='모든 앨범을 봤어요!'}};
+      const t=document.querySelector(`#ct [data-c="${id}"]`);if(t&&!t.textContent.includes('✓'))t.textContent+=' ✓';
+    }
+    finish();
+    T.album.refreshMarks=()=>{const m=autoMatch(r,id);const a=document.getElementById('mky'),b=document.getElementById('mkn');if(a){a.textContent=m===true?'✓':'';b.textContent=m===false?'✓':''}};
+    function toTop(){requestAnimationFrame(()=>{const c=document.getElementById('ct');if(c)c.scrollIntoView({behavior:'smooth',block:'start'})})}
+    document.querySelectorAll('#ct [data-c]').forEach(b=>b.onclick=()=>{T.album.chain=b.dataset.c;T.album.reveal=0;renderAlbumBody()});
+  }
+  async function showCompare(){
+    const rows=[];
+    for(const r of [1,2]){const meta=(await S.get(`${R(code)}/rounds/${r}/meta`));if(!meta){rows.push({r,ok:0,tot:0,none:true});continue}
+      T.meta[r]=meta;T.steps[r]=(await S.get(`${R(code)}/rounds/${r}/steps`))||{};T.match[r]=(await S.get(`${R(code)}/rounds/${r}/match`))||{};
+      let ok=0,tot=0;for(const id in meta){const m=autoMatch(r,id);if(m!==null){tot++;if(m)ok++}}rows.push({r,ok,tot})}
+    const bg=h(`<div class="modalBg" role="dialog" aria-label="라운드 비교"><div class="modal stack"><h2>처음과 마지막이 일치한 체인</h2>
+      <div class="cmp">${rows.map(x=>`<span>${x.r}라운드<br><small class="muted">${x.r===1?'질문 금지':'질문 1번'}</small></span><div class="track"><div class="fill ${x.r===2?'r2':''}" style="width:${x.tot?x.ok/x.tot*100:0}%"></div></div><span class="num">${x.none?'아직':`${x.ok} / ${x.tot}`}</span>`).join('')}</div>
+      <p class="muted" style="margin:0">2라운드가 더 잘 맞았다면, 왜 그랬을까요? AI에게도 그렇게 할 수 있을까요?</p>
+      <button class="main" id="cx">닫기</button></div></div>`);
+    document.body.appendChild(bg);bg.querySelector('#cx').onclick=()=>bg.remove();
+  }
+  async function delRoom(){
+    const bg=h(`<div class="modalBg" role="dialog"><div class="modal stack"><h2>방을 지울까요?</h2><p>그림과 단어가 모두 지워지고 되돌릴 수 없어요.</p><div class="row" style="justify-content:flex-end"><button class="ghost" id="dn">취소</button><button class="main" id="dy">지우기</button></div></div></div>`);
+    document.body.appendChild(bg);bg.querySelector('#dn').onclick=()=>bg.remove();
+    bg.querySelector('#dy').onclick=async()=>{await S.remove(R(code));bg.remove();stopTick();location.href=location.pathname};
+  }
+}
+
+/* ============================== 학생 ============================== */
+function student(code,pid){
+  const P={state:null,meta:null,metaRound:null,view:null,pad:null,input:null,submitted:false,unq:null,unans:null,players:{}};
+  const me={group:+pid.match(/^g(\d+)_/)[1],name:nameOf(pid)};
+  let tick=setInterval(timer,500);
+  S.on(R(code)+'/state',v=>{if(!v){$app.innerHTML=header()+'<div class="card center"><h2>방이 끝났어요</h2></div>';return}P.state=v;route()});
+  S.on(R(code)+'/players',v=>{P.players=v||{};if(P.state&&P.state.phase==='lobby')lobby()});
+  async function ensureMeta(r){if(P.metaRound===r&&P.meta)return;P.meta=(await S.get(`${R(code)}/rounds/${r}/meta`))||{};P.metaRound=r}
+  function myChain(s){
+    const ids=Object.keys(P.meta||{});const any=ids.find(id=>P.meta[id].members.includes(pid));if(!any)return null;
+    const ch0=P.meta[any];const i=ch0.members.indexOf(pid),n=ch0.n;const c=((i-s)%n+n)%n;const id=`g${ch0.group}c${c}`;return{id,ch:P.meta[id],i}}
+  async function route(){
+    const st=P.state;
+    if(st.phase==='lobby'){if(P.view!=='lobby'){P.view='lobby';lobby()}return}
+    if(st.phase==='album'){const k='album-'+st.round;if(P.view!==k){P.view=k;await ensureMeta(st.round);album()}return}
+    await ensureMeta(st.round);
+    const k=`play-${st.round}-${st.step}`;
+    if(st.phase==='collect'&&P.view===k&&!P.submitted){await submit(true);return}
+    if(P.view!==k&&st.phase==='play'){P.view=k;P.submitted=false;await play()}
+  }
+  function lobby(){
+    const mates=Object.entries(P.players).filter(([,p])=>p.group===me.group).map(([,p])=>p.name).sort((a,b)=>String(a).localeCompare(String(b),'ko'));
+    $app.innerHTML=header(`<span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+`<div class="card stack center">${IMG.wave}<h1>곧 시작해요!</h1><p class="muted">선생님이 시작하면 화면이 바뀌어요.</p><div class="chips" style="justify-content:center">${mates.map(n=>`<span class="chip">${esc(n)}</span>`).join('')}</div><p class="muted" style="margin:0">우리 모둠에 들어온 친구들</p></div>`;
+  }
+  function clearQ(){if(P.unq){P.unq();P.unq=null}if(P.unans){P.unans();P.unans=null}document.querySelectorAll('.modalBg.qm').forEach(x=>x.remove())}
+  async function play(){
+    clearQ();const st=P.state,s=st.step,mc=myChain(s);
+    if(!mc){$app.innerHTML=header()+`<div class="card center stack"><h2>이번 라운드 명단에 내 이름이 없어요</h2><p class="muted" style="margin:0">처음 들어올 때와 <b>모둠·이름을 똑같이</b> 써야 이어서 할 수 있어요.<br>이번 라운드 중간에 처음 들어왔다면 다음 라운드부터 함께해요.</p><button class="main" id="rej">다시 들어가기</button></div>`;document.getElementById('rej').onclick=()=>{location.href=location.pathname+'?room='+code+'&new=1'};return}
+    const{id,ch}=mc;
+    if(s>=ch.L){$app.innerHTML=header(`<span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+'<div class="card center stack">'+IMG.rocket+'<h2>우리 모둠은 끝났어요!</h2><p class="muted">다른 모둠을 기다리는 중이에요.</p></div>';return}
+    const type=stepType(s);let prev=null;if(s>0)prev=await S.get(`${R(code)}/rounds/${st.round}/steps/${id}/${s-1}`);
+    const prevAuthor=s>0?workerOf(ch,s-1):null;
+    let top='';
+    if(s===0)top=`<div class="prompt"><small>제시어</small>${esc(ch.start)}</div>`;
+    else if(type==='draw')top=`<div class="prompt"><small>친구가 쓴 단어</small>${esc(prev&&prev.text||'(빈칸)')}</div>`;
+    else top=`<div class="stack"><div class="prompt" style="font-size:1.3rem">친구 그림을 보고 무엇인지 단어로 써요</div>${shotHTML(prev)}</div>`;
+    $app.innerHTML=header(`<span class="pill on">${st.round}라운드 · ${s+1}/${ch.L}</span><span class="pill">${me.group}모둠 · ${esc(me.name)}</span><span class="timer" id="tm" style="font-size:1.5rem"></span>`)+`
+      <div class="stack" id="work">${top}<div id="qbox"></div><div id="tool" class="stack"></div>
+      <div class="row" style="justify-content:center"><button class="main big" id="sb">다 했어요</button></div></div>`;
+    const tool=document.getElementById('tool');
+    if(type==='draw'){P.pad=drawUI(tool);P.input=null}else{P.pad=null;P.input=h('<input id="wd" maxlength="30" placeholder="무엇일까요? 단어나 짧은 말로 써요" style="font-size:1.4rem;text-align:center">');tool.appendChild(P.input);P.input.focus()}
+    document.getElementById('sb').onclick=()=>submit(false);
+    // 2라운드: 앞 친구에게 질문 1번
+    if(st.q&&s>0&&prevAuthor){
+      const qk=`${R(code)}/rounds/${st.round}/qa/${id}_${s}`;const pn=nameOf(prevAuthor);
+      const qbox=document.getElementById('qbox');
+      qbox.innerHTML=`<div class="qa row" style="justify-content:space-between"><span>앞 친구(${esc(pn)})에게 <b>딱 한 번</b> 물어볼 수 있어요.</span><span class="row" id="qa_in"><input id="qq" maxlength="40" placeholder="예: 몇 개야? 사람이야 동물이야?"><button id="qs">질문하기</button></span></div>`;
+      document.getElementById('qs').onclick=async()=>{const v=document.getElementById('qq').value.trim();if(!v)return;await S.set(qk,{q:v,from:pid,to:prevAuthor});};
+      P.unans=S.on(qk,v=>{if(!v||!v.q)return;const box=document.getElementById('qa_in');if(box)box.outerHTML=`<span><span class="q" style="color:var(--blue)">질문: ${esc(v.q)}</span><br><span style="color:var(--green)">${v.a?'대답: '+esc(v.a):'대답을 기다리는 중…'}</span></span>`;else{const sp=qbox.querySelector('.qa');if(sp)sp.innerHTML=`<span><span style="color:var(--blue)">질문: ${esc(v.q)}</span><br><span style="color:var(--green)">${v.a?'대답: '+esc(v.a):'대답을 기다리는 중…'}</span></span>`}});
+    }
+    // 내가 질문을 받는 쪽: 내 뒤 친구가 지금 단계에서 받은 체인 = 내가 바로 전 단계에서 만든 체인
+    if(st.q&&s>0){
+      const mineId=myChain(s-1).id; // s-1 단계에서 내가 작업한 체인
+      const ck=P.meta[mineId];
+      if(ck&&s<ck.L){
+        const qk2=`${R(code)}/rounds/${st.round}/qa/${mineId}_${s}`;
+        P.unq=S.on(qk2,async v=>{
+          if(!v||!v.q||v.a||document.querySelector('.modalBg.qm'))return;
+          const mine=await S.get(`${R(code)}/rounds/${st.round}/steps/${mineId}/${s-1}`);
+          const fromN=nameOf(v.from);
+          const bg=h(`<div class="modalBg qm" role="dialog" aria-label="질문 도착"><div class="modal stack"><h2>${esc(fromN)} 친구가 물어봐요!</h2><div class="qa"><span class="q">${esc(v.q)}</span></div><p class="muted" style="margin:0">내가 만든 것:</p>${shotHTML(mine)}<input id="an" maxlength="40" placeholder="짧게 대답해요"><button class="main" id="ab2">대답 보내기</button></div></div>`);
+          document.body.appendChild(bg);const inp=bg.querySelector('#an');inp.focus();
+          bg.querySelector('#ab2').onclick=async()=>{const a=inp.value.trim();if(!a)return;await S.update(qk2,{a});bg.remove()};
+        });
+      }
+    }
+  }
+  async function submit(auto){
+    if(P.submitted)return;const st=P.state,s=st.step,mc=myChain(s);if(!mc||s>=mc.ch.L)return;P.submitted=true;
+    const type=stepType(s);const data={by:pid,type};
+    if(type==='draw'){if(P.pad&&!P.pad.isEmpty())data.img=P.pad.data()}else{data.text=(P.input&&P.input.value.trim())||''}
+    await S.set(`${R(code)}/rounds/${st.round}/steps/${mc.id}/${s}`,data);
+    await S.set(`${R(code)}/rounds/${st.round}/done/${mc.id}_${s}`,true);
+    const w=document.getElementById('work');if(w)w.innerHTML=`<div class="card center stack">${IMG.rocket}<h2>${auto?'시간이 끝나서 저장했어요':'잘했어요! 저장했어요'}</h2><p class="muted">모든 친구가 끝나면 다음 단계로 넘어가요.</p></div>`;
+  }
+  function timer(){const t=document.getElementById('tm');if(!t||!P.state||P.state.phase!=='play')return;const left=Math.max(0,Math.ceil((P.state.deadline-now())/1000));t.textContent=`${left}초`;t.classList.toggle('low',left<=10)}
+  async function album(){
+    clearQ();const r=P.state.round;
+    const ids=Object.keys(P.meta).filter(id=>P.meta[id].group===me.group).sort((a,b)=>P.meta[a].c-P.meta[b].c);
+    const all=(await S.get(`${R(code)}/rounds/${r}/steps`))||{},qa=(await S.get(`${R(code)}/rounds/${r}/qa`))||{};
+    const played={};let sel=ids.find(id=>workerOf(P.meta[id],0)===pid)||ids[0],timer=null;
+    const itemsOf=id=>{const ch=P.meta[id],st=all[id]||{};const it=[{first:true,text:ch.start,label:'처음 제시어'}];for(let s=0;s<ch.L;s++)it.push({kind:stepType(s),step:st[s],who:nameOf(workerOf(ch,s)),qa:qa[`${id}_${s}`]});return it};
+    const bub=x=>{if(x.first)return `<div class="bub first"><small>${esc(x.label)}</small><div>${esc(x.text||'(빈칸)')}</div></div>`;
+      const q=x.qa&&x.qa.q?`<div class="qa"><div class="q">질문: ${esc(x.qa.q)}</div><div class="a">${x.qa.a?'대답: '+esc(x.qa.a):'(대답 못 받음)'}</div></div>`:'';
+      const b=x.kind==='draw'?(x.step&&x.step.img?`<img class="shot" alt="${esc(x.who)}의 그림" src="${x.step.img}">`:'<div class="shot ph">(시간 안에 못 그렸어요)</div>'):`<div class="say">${esc(x.step&&x.step.text||'(빈칸)')}</div>`;
+      return `<div class="bub ${x.kind}"><span class="who">${esc(x.who)} ${x.kind==='draw'?'그림':'단어'}</span>${q}${b}</div>`};
+    const draw=()=>{if(timer){clearInterval(timer);timer=null}
+      const items=itemsOf(sel);
+      $app.innerHTML=header(`<span class="pill on">${r}라운드 앨범</span><span class="pill">${me.group}모둠 · ${esc(me.name)}</span>`)+`<div class="card stack">
+        <div class="tabs">${ids.map(id=>`<button data-c="${id}" class="${id===sel?'sel':''}">${esc(nameOf(workerOf(P.meta[id],0)))}의 앨범${played[id]?' ✓':''}</button>`).join('')}</div>
+        <div class="stage" id="stage">${items.map(bub).join('')}</div>
+        <div id="res"></div></div>`;
+      played[sel]=true;{const last=items[items.length-1];const lt=last.kind==='word'?(last.step&&last.step.text||'(빈칸)'):'(그림)';
+        const i2=ids.indexOf(sel);
+        document.getElementById('res').innerHTML=`<div class="result"><div class="vs"><span class="b1">${esc(items[0].text||'')}</span><i>➜</i><span class="b2">${esc(lt)}</span></div>
+          <p class="center muted" style="margin:0">처음과 마지막, 같았나요? 어디서 달라졌을까요?</p>
+          ${i2<ids.length-1?'<div class="row" style="justify-content:center"><button class="main" id="nextc">다음 친구 앨범 ▶</button></div>':''}</div>`;
+        const nc=document.getElementById('nextc');if(nc)nc.onclick=()=>{sel=ids[i2+1];draw();window.scrollTo({top:0,behavior:'smooth'})}}
+      document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{sel=b.dataset.c;draw()})};
+    if(sel)draw();else $app.innerHTML=header()+`<div class="card center stack">${IMG.wave}<h2>TV 화면을 함께 봐요! 📺</h2></div>`;
+  }
+}
+
+/* ============================== 시작 ============================== */
+(async()=>{
+  try{S=FIREBASE_CONFIG?await firebaseStore(FIREBASE_CONFIG):demoStore()}
+  catch(e){$app.innerHTML='<div class="card"><h2>연결하지 못했어요</h2><p>인터넷 연결이나 Firebase 설정값을 확인해 주세요.</p></div>';return}
+  const saved=(()=>{try{return JSON.parse(RS().get('kkori-student')||'null')}catch(e){return null}})();
+  const q=new URLSearchParams(location.search);
+  if(saved&&(!q.get('room')||q.get('room')===saved.code)&&!q.get('new')&&(await S.get(R(saved.code)+'/players/'+saved.pid))){student(saved.code,saved.pid);return}
+  home();
+})();
+</script>
+</body>
+</html>
