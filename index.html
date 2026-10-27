@@ -271,8 +271,8 @@ const RS=()=>(S&&S.demo)?ss:ls; // 실제 수업: 태블릿이 꺼져도 기억,
 const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
 const R=code=>`rooms/${code}`;
 const DEF_WORDS={
- 1:['춤추는 바나나 세 개','냉장고 속에 숨은 펭귄','화난 감자','방귀 뀌는 공룡','수염 난 달걀'],
- 2:['선글라스 낀 닭 두 마리','지붕 위에서 요가하는 소','우는 양파','땀 흘리는 아이스크림','도넛 먹는 강아지']};
+ 1:['코딱지 파는 토끼','모자 쓴 수박','스케이트보드 탄 노란 의자','이불 덮고 자는 해님','줄넘기하는 오징어'],
+ 2:['안경 쓴 물고기','날개 달린 분홍 의자','노래하는 당근','우산 쓴 눈사람','물구나무 선 곰']};
 const PAGE_TAG='<span class="pagetag">AI문해력5<br>93쪽</span>';
 function header(right=''){return `<div class="bar"><div class="brand"><img src="assets/img/think-plus.webp" alt="생각 더하기" class="badge"><span>꼬리 물기로 같은 생각하기</span></div><div class="row">${right}</div></div>${S&&S.demo?'<div class="demo">데모 모드예요. 이 컴퓨터의 같은 브라우저 탭끼리만 연결돼요. 수업에서 쓰려면 안내서대로 Firebase 설정값을 넣어 주세요.</div>':''}`}
 const IMG={picnic:'<img class="hero" src="assets/img/picnic.webp" alt="">',wave:'<img class="mascot" src="assets/img/robot-wave.webp" alt="">',rocket:'<img class="mascot" style="width:min(150px,40%)" src="assets/img/robot-rocket.webp" alt="">'};
@@ -429,8 +429,8 @@ function teacher(code){
       <div class="card stack"><h2>게임 설정</h2>
         <div class="row">
           <label>단계 수 (그림·단어 합)<select id="s_steps">${[2,3,4,5,6].map(x=>`<option ${x===(s.steps||4)?'selected':''}>${x}</option>`).join('')}</select></label>
-          <label>그리기 시간(초)<input id="s_draw" type="number" min="20" max="180" value="${s.drawSec||60}" style="width:110px"></label>
-          <label>단어 쓰기 시간(초)<input id="s_word" type="number" min="10" max="120" value="${s.wordSec||30}" style="width:110px"></label>
+          <label>그리기 시간(초)<input id="s_draw" type="number" min="20" max="180" value="${s.drawSec||40}" style="width:110px"></label>
+          <label>단어 쓰기 시간(초)<input id="s_word" type="number" min="10" max="120" value="${s.wordSec||20}" style="width:110px"></label>
           <label>2라운드 질문 시간 추가(초)<input id="s_q" type="number" min="0" max="90" value="${s.qSec??20}" style="width:110px"></label>
         </div>
         <div class="grid2">
